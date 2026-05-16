@@ -150,10 +150,12 @@ export default function DetailModal({
                   <Play className="h-4 w-4 fill-current" />
                   Play
                 </Button>
+{profileId && (
                 <Button variant="outline" onClick={toggleWatchlist} className="gap-2">
                   {inList ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                   {inList ? "In My List" : "My List"}
                 </Button>
+                )}
               </div>
 
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
