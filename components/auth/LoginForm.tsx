@@ -23,7 +23,11 @@ export default function LoginForm() {
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      setError(error.message);
+      setError(
+        error.message === "Invalid login credentials"
+          ? "Invalid email or password. Don't have an account? Sign up below."
+          : error.message
+      );
       setLoading(false);
     } else {
       router.push("/profiles");
@@ -116,6 +120,21 @@ export default function LoginForm() {
           GitHub
         </Button>
       </div>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">or</span>
+        </div>
+      </div>
+
+      <Link href="/browse">
+        <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground">
+          Continue as Guest
+        </Button>
+      </Link>
 
       <p className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}

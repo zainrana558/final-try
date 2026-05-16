@@ -3,12 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, Bell, User, LogOut, ChevronDown } from "lucide-react";
+import { Search, Bell, User, LogOut, LogIn, ChevronDown } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function Navbar() {
+interface NavbarProps {
+  isGuest?: boolean;
+}
+
+export default function Navbar({ isGuest = false }: NavbarProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -50,9 +54,11 @@ export default function Navbar() {
             <Link href="/tv" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               TV Shows
             </Link>
-            <Link href="/my-list" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              My List
-            </Link>
+            {!isGuest && (
+              <Link href="/my-list" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                My List
+              </Link>
+            )}
           </div>
         </div>
 
@@ -75,49 +81,61 @@ export default function Navbar() {
             </button>
           )}
 
-          <button className="text-muted-foreground hover:text-foreground">
-            <Bell className="h-5 w-5" />
-          </button>
-
-          <div className="relative">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
+          {isGuest ? (
+            <Link
+              href="/login"
+              className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition-colors"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-pink-500">
-                <User className="h-4 w-4 text-white" />
-              </div>
-              <ChevronDown className="h-3 w-3" />
-            </button>
+              <LogIn className="h-4 w-4" />
+              Sign In
+            </Link>
+          ) : (
+            <>
+              <button className="text-muted-foreground hover:text-foreground">
+                <Bell className="h-5 w-5" />
+              </button>
 
-            {menuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-border bg-card p-2 shadow-xl">
-                <Link
-                  href="/profiles"
-                  className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  <User className="h-4 w-4" />
-                  Switch Profile
-                </Link>
-                <Link
-                  href="/history"
-                  className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Watch History
-                </Link>
-                <hr className="my-1 border-border" />
+              <div className="relative">
                 <button
-                  onClick={handleSignOut}
-                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-secondary"
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
                 >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
+                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-pink-500">
+                    <User className="h-4 w-4 text-white" />
+                  </div>
+                  <ChevronDown className="h-3 w-3" />
                 </button>
+
+                {menuOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-border bg-card p-2 shadow-xl">
+                    <Link
+                      href="/profiles"
+                      className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <User className="h-4 w-4" />
+                      Switch Profile
+                    </Link>
+                    <Link
+                      href="/history"
+                      className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Watch History
+                    </Link>
+                    <hr className="my-1 border-border" />
+                    <button
+                      onClick={handleSignOut}
+                      className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-secondary"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </nav>

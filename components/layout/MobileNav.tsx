@@ -2,19 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Film, Tv, Heart, Search } from "lucide-react";
+import { Home, Film, Tv, Heart, Search, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const links = [
-  { href: "/browse", icon: Home, label: "Home" },
-  { href: "/movies", icon: Film, label: "Movies" },
-  { href: "/tv", icon: Tv, label: "TV" },
-  { href: "/search", icon: Search, label: "Search" },
-  { href: "/my-list", icon: Heart, label: "My List" },
+const allLinks = [
+  { href: "/browse", icon: Home, label: "Home", guestVisible: true },
+  { href: "/movies", icon: Film, label: "Movies", guestVisible: true },
+  { href: "/tv", icon: Tv, label: "TV", guestVisible: true },
+  { href: "/search", icon: Search, label: "Search", guestVisible: true },
+  { href: "/my-list", icon: Heart, label: "My List", guestVisible: false },
 ];
 
-export default function MobileNav() {
+interface MobileNavProps {
+  isGuest?: boolean;
+}
+
+export default function MobileNav({ isGuest = false }: MobileNavProps) {
   const pathname = usePathname();
+
+  const links = isGuest
+    ? [...allLinks.filter((l) => l.guestVisible), { href: "/login", icon: LogIn, label: "Sign In", guestVisible: true }]
+    : allLinks;
 
   return (
     <nav className="fixed bottom-0 left-0 z-50 w-full border-t border-border bg-background/95 backdrop-blur-sm md:hidden">

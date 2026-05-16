@@ -36,7 +36,11 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname === "/" ||
     request.nextUrl.pathname.startsWith("/auth/callback") ||
     request.nextUrl.pathname.startsWith("/api/") ||
-    request.nextUrl.pathname.startsWith("/embed/");
+    request.nextUrl.pathname.startsWith("/embed/") ||
+    request.nextUrl.pathname.startsWith("/browse") ||
+    request.nextUrl.pathname.startsWith("/movies") ||
+    request.nextUrl.pathname.startsWith("/tv") ||
+    request.nextUrl.pathname.startsWith("/search");
 
   if (!user && !isAuthPage && !isPublicPath) {
     const url = request.nextUrl.clone();

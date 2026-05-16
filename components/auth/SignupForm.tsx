@@ -144,6 +144,21 @@ export default function SignupForm() {
         </Button>
       </div>
 
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">or</span>
+        </div>
+      </div>
+
+      <Link href="/browse">
+        <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground">
+          Continue as Guest
+        </Button>
+      </Link>
+
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link href="/login" className="text-primary hover:underline">
