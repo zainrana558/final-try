@@ -48,8 +48,16 @@ export default function DetailModal({
 
   useEffect(() => {
     if (!profileId) return;
-    fetch(`/api/tmdb?endpoint=/check-watchlist&profile_id=${profileId}&media_id=${mediaId}&media_type=${mediaType}`)
-      .catch(() => {});
+    import("@/actions/watchlist").then(({ isInWatchlist }) => {
+      isInWatchlist(profileId, mediaId, mediaType).then(setInList);
+    }).catch(() => {});
+  }, [profileId, mediaId, mediaType]);
+
+  useEffect(() => {
+    if (!profileId) return;
+    import("@/actions/ratings").then(({ getRating }) => {
+      getRating(profileId, mediaId, mediaType).then(setUserRating);
+    }).catch(() => {});
   }, [profileId, mediaId, mediaType]);
 
   useEffect(() => {

@@ -23,15 +23,13 @@ export default async function EmbedPage({ params, searchParams }: EmbedPageProps
   );
 
   return (
-    <html lang="en">
-      <body style={{ margin: 0, padding: 0, overflow: "hidden" }}>
-        <iframe
-          src={embedUrl}
-          style={{ width: "100vw", height: "100vh", border: "none" }}
-          allow="autoplay; fullscreen; encrypted-media"
-          allowFullScreen
-        />
-      </body>
-    </html>
+    <div className="fixed inset-0 bg-black">
+      <iframe
+        src={embedUrl}
+        style={{ width: "100vw", height: "100vh", border: "none" }}
+        allow="autoplay; fullscreen; encrypted-media"
+        allowFullScreen
+      />
+    </div>
   );
 }
