@@ -57,6 +57,7 @@ export default function ProfileSelector({ profiles }: { profiles: Profile[] }) {
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
+    document.cookie = "profile_id=; path=/; max-age=0";
     router.push("/login");
     router.refresh();
   }
