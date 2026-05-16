@@ -1,10 +1,15 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { X, ChevronDown } from "lucide-react";
+import { X, ChevronDown, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { MediaItem, Season, Episode } from "@/types";
 import { getTitle } from "@/lib/utils";
+
+interface EmbedProvider {
+  name: string;
+  url: string;
+}
 
 interface VideoPlayerProps {
   item: MediaItem;
@@ -28,6 +33,9 @@ export default function VideoPlayer({
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [showEpisodes, setShowEpisodes] = useState(false);
+  const [providers, setProviders] = useState<EmbedProvider[]>([]);
+  const [providerIndex, setProviderIndex] = useState(0);
+  const [showServers, setShowServers] = useState(false);
   const mediaType = item.media_type || (item.title ? "movie" : "tv");
 
   const fetchEmbed = useCallback(async () => {
@@ -40,10 +48,21 @@ export default function VideoPlayer({
     const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
-      setEmbedUrl(data.url);
+      const list: EmbedProvider[] = data.providers ?? [];
+      setProviders(list);
+      setProviderIndex(0);
+      setEmbedUrl(list[0]?.url ?? data.url ?? null);
     }
     setLoading(false);
   }, [item.id, mediaType, season, episode]);
+
+  const switchProvider = (index: number) => {
+    if (index >= 0 && index < providers.length) {
+      setProviderIndex(index);
+      setEmbedUrl(providers[index].url);
+      setShowServers(false);
+    }
+  };
 
   useEffect(() => {
     fetchEmbed();
@@ -109,12 +128,42 @@ export default function VideoPlayer({
 
   return (
     <div className="fixed inset-0 z-[60] bg-black">
-      <button
-        onClick={onClose}
-        className="absolute right-4 top-4 z-10 rounded-full bg-black/60 p-2 text-white hover:bg-black/80"
-      >
-        <X className="h-6 w-6" />
-      </button>
+      <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
+        {providers.length > 1 && (
+          <div className="relative">
+            <button
+              onClick={() => setShowServers(!showServers)}
+              className="flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-2 text-sm text-white hover:bg-black/80"
+            >
+              <RefreshCw className="h-4 w-4" />
+              {providers[providerIndex]?.name ?? "Server"}
+            </button>
+            {showServers && (
+              <div className="absolute right-0 top-full mt-1 w-40 rounded-lg bg-zinc-900 p-1 shadow-lg">
+                {providers.map((p, i) => (
+                  <button
+                    key={p.name}
+                    onClick={() => switchProvider(i)}
+                    className={`w-full rounded-md px-3 py-2 text-left text-sm transition-colors ${
+                      i === providerIndex
+                        ? "bg-primary text-white"
+                        : "text-zinc-300 hover:bg-zinc-800"
+                    }`}
+                  >
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        <button
+          onClick={onClose}
+          className="rounded-full bg-black/60 p-2 text-white hover:bg-black/80"
+        >
+          <X className="h-6 w-6" />
+        </button>
+      </div>
 
       <div className="flex h-full flex-col">
         <div className="relative flex-1">

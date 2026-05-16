@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getEmbedUrl } from "@/lib/nexstream/client";
+import { getAllEmbedUrls } from "@/lib/streaming/providers";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -12,12 +12,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Missing tmdb or type" }, { status: 400 });
   }
 
-  const embedUrl = getEmbedUrl(
+  const providers = getAllEmbedUrls(
     type,
     parseInt(tmdbId),
     season ? parseInt(season) : undefined,
     episode ? parseInt(episode) : undefined
   );
 
-  return NextResponse.json({ url: embedUrl });
+  return NextResponse.json({ providers, url: providers[0]?.url ?? null });
 }
