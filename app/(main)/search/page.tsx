@@ -26,10 +26,14 @@ export default function SearchPage() {
 
     const timeout = setTimeout(async () => {
       setLoading(true);
-      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-      if (res.ok) {
-        const data = await res.json();
-        setResults(data.results || []);
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setResults(data.results || []);
+        }
+      } catch {
+        // network error — results stays empty
       }
       setLoading(false);
     }, 400);

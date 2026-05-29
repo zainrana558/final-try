@@ -32,12 +32,16 @@ export default function DetailModal({
 
   const fetchDetails = useCallback(async () => {
     setLoading(true);
-    const res = await fetch(
-      `/api/tmdb?endpoint=/${mediaType}/${mediaId}&append_to_response=credits,similar,videos`
-    );
-    if (res.ok) {
-      const data = await res.json();
-      setDetails(data);
+    try {
+      const res = await fetch(
+        `/api/tmdb?endpoint=/${mediaType}/${mediaId}&append_to_response=credits,similar,videos`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setDetails(data);
+      }
+    } catch {
+      // network error — details stays null, UI shows "Failed to load details"
     }
     setLoading(false);
   }, [mediaId, mediaType]);

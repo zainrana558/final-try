@@ -46,9 +46,10 @@ export async function getWatchlist(profileId: string) {
   const supabase = await createClient();
   const { data } = await supabase
     .from("watchlist")
-    .select("*")
+    .select("id, profile_id, media_id, media_type, title, poster_path, added_at")
     .eq("profile_id", profileId)
-    .order("added_at", { ascending: false });
+    .order("added_at", { ascending: false })
+    .limit(100);
 
   return data || [];
 }
