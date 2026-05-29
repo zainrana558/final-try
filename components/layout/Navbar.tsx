@@ -12,10 +12,21 @@ interface NavbarProps {
   isGuest?: boolean;
 }
 
+const genreLinks = [
+  { href: "/anime",   label: "Anime" },
+  { href: "/cartoon", label: "Cartoon" },
+  { href: "/horror",  label: "Horror" },
+  { href: "/comedy",  label: "Comedy" },
+  { href: "/action",  label: "Action" },
+  { href: "/romance", label: "Romance" },
+  { href: "/scifi",   label: "Sci-Fi" },
+];
+
 export default function Navbar({ isGuest = false }: NavbarProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [genreOpen, setGenreOpen] = useState(false);
   const router = useRouter();
 
   function handleSearch(e: React.FormEvent) {
@@ -59,6 +70,30 @@ export default function Navbar({ isGuest = false }: NavbarProps) {
                 My List
               </Link>
             )}
+            {/* Genres dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setGenreOpen(!genreOpen)}
+                onBlur={() => setTimeout(() => setGenreOpen(false), 150)}
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Genres <ChevronDown className="h-3 w-3" />
+              </button>
+              {genreOpen && (
+                <div className="absolute left-0 top-full mt-2 w-40 rounded-lg border border-border bg-card p-1 shadow-xl z-50">
+                  {genreLinks.map(({ href, label }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      className="block rounded-md px-3 py-2 text-sm hover:bg-secondary transition-colors"
+                      onClick={() => setGenreOpen(false)}
+                    >
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -136,6 +171,22 @@ export default function Navbar({ isGuest = false }: NavbarProps) {
               </div>
             </>
           )}
+        </div>
+      </div>
+
+      {/* Mobile genre scroll row */}
+      <div className="md:hidden overflow-x-auto scrollbar-hide border-t border-border/30 bg-background/80" style={{ scrollbarWidth: "none" }}>
+        <div className="flex gap-1 px-4 py-2" style={{ width: "max-content" }}>
+          {genreLinks.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className="flex-shrink-0 rounded-full px-3 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              style={{ minHeight: 32 }}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
       </div>
     </nav>

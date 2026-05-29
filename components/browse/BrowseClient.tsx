@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import HeroBanner from "./HeroBanner";
 import ContentRow from "./ContentRow";
+import GenreBanner from "./GenreBanner";
 import DetailModal from "@/components/modals/DetailModal";
 import VideoPlayer from "@/components/modals/VideoPlayer";
 import type { MediaItem, ContentRow as ContentRowType } from "@/types";
@@ -45,6 +46,8 @@ export default function BrowseClient({ heroItems, rows, profileId }: BrowseClien
       />
 
       <div className="-mt-16 relative z-10 space-y-8 pb-12">
+        <GenreBanner />
+
         {rows.map((row) => (
           <ContentRow
             key={row.title}
