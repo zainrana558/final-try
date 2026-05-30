@@ -23,11 +23,7 @@ export default function LoginForm() {
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      setError(
-        error.message === "Invalid login credentials"
-          ? "Invalid email or password. Don't have an account? Sign up below."
-          : error.message
-      );
+      setError("Invalid email or password. Don't have an account? Sign up below.");
       setLoading(false);
     } else {
       router.push("/profiles");
@@ -42,7 +38,7 @@ export default function LoginForm() {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
-    if (error) setError(error.message);
+    if (error) setError("Failed to sign in. Please try again.");
   }
 
   return (

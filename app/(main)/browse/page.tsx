@@ -4,6 +4,9 @@ import { getContinueWatching } from "@/actions/progress";
 import BrowseClient from "@/components/browse/BrowseClient";
 import type { ContentRow, MediaItem } from "@/types";
 
+// LUMINA: Home page accent color - red
+const HOME_ACCENT = "#E50914";
+
 export default async function BrowsePage() {
   const cookieStore = await cookies();
   const profileId = cookieStore.get("profile_id")?.value || null;
@@ -48,5 +51,9 @@ export default async function BrowsePage() {
     { title: "Top Rated Movies", items: topRatedMovies.results, mediaType: "movie" },
   );
 
-  return <BrowseClient heroItems={heroItems} rows={rows} profileId={profileId} />;
+  return (
+    <div style={{ "--accent": HOME_ACCENT } as React.CSSProperties}>
+      <BrowseClient heroItems={heroItems} rows={rows} profileId={profileId} accentColor={HOME_ACCENT} />
+    </div>
+  );
 }

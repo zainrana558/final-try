@@ -2,6 +2,10 @@ import { cookies } from "next/headers";
 import { getByGenreDiscover } from "@/lib/tmdb/client";
 import GenrePageClient from "@/components/browse/GenrePageClient";
 import type { ContentRow } from "@/types";
+import { comedyConfig } from "@/lib/particles/configs";
+
+// LUMINA: Comedy page accent color - warm orange
+const COMEDY_ACCENT = "#FF8C00";
 
 export default async function ComedyPage() {
   const cookieStore = await cookies();
@@ -20,5 +24,16 @@ export default async function ComedyPage() {
     { title: "More Comedy Movies", items: moviesPage2.results, mediaType: "movie" },
   ];
 
-  return <GenrePageClient title="Comedy" accentColor="#facc15" rows={rows} profileId={profileId} />;
+  return (
+    <div style={{ "--accent": COMEDY_ACCENT, background: comedyConfig.background } as React.CSSProperties}>
+      <GenrePageClient 
+        title="Comedy" 
+        accentColor={COMEDY_ACCENT} 
+        rows={rows} 
+        profileId={profileId} 
+        particleConfig={comedyConfig}
+        tagline="Laugh until it hurts"
+      />
+    </div>
+  );
 }

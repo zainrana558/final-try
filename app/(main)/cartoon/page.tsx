@@ -2,6 +2,10 @@ import { cookies } from "next/headers";
 import { getByGenreDiscover } from "@/lib/tmdb/client";
 import GenrePageClient from "@/components/browse/GenrePageClient";
 import type { ContentRow } from "@/types";
+import { cartoonConfig } from "@/lib/particles/configs";
+
+// LUMINA: Cartoon page accent color - amber
+const CARTOON_ACCENT = "#FFB800";
 
 export default async function CartoonPage() {
   const cookieStore = await cookies();
@@ -19,5 +23,16 @@ export default async function CartoonPage() {
     { title: "More Cartoons", items: tvPage2.results, mediaType: "tv" },
   ];
 
-  return <GenrePageClient title="Cartoons" accentColor="#4ade80" rows={rows} profileId={profileId} />;
+  return (
+    <div style={{ "--accent": CARTOON_ACCENT, background: cartoonConfig.background } as React.CSSProperties}>
+      <GenrePageClient 
+        title="Cartoons" 
+        accentColor={CARTOON_ACCENT} 
+        rows={rows} 
+        profileId={profileId} 
+        particleConfig={cartoonConfig}
+        tagline="Animated adventures for everyone"
+      />
+    </div>
+  );
 }

@@ -2,6 +2,10 @@ import { cookies } from "next/headers";
 import { getByGenreDiscover } from "@/lib/tmdb/client";
 import GenrePageClient from "@/components/browse/GenrePageClient";
 import type { ContentRow } from "@/types";
+import { horrorConfig } from "@/lib/particles/configs";
+
+// LUMINA: Horror page accent color - void purple
+const HORROR_ACCENT = "#8B00FF";
 
 export default async function HorrorPage() {
   const cookieStore = await cookies();
@@ -20,5 +24,16 @@ export default async function HorrorPage() {
     { title: "More Horror Movies", items: moviesPage2.results, mediaType: "movie" },
   ];
 
-  return <GenrePageClient title="Horror" accentColor="#ef4444" rows={rows} profileId={profileId} />;
+  return (
+    <div style={{ "--accent": HORROR_ACCENT, background: horrorConfig.background } as React.CSSProperties}>
+      <GenrePageClient 
+        title="Horror" 
+        accentColor={HORROR_ACCENT} 
+        rows={rows} 
+        profileId={profileId} 
+        particleConfig={horrorConfig}
+        tagline="Face your fears"
+      />
+    </div>
+  );
 }

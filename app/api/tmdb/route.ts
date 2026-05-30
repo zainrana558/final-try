@@ -37,14 +37,27 @@ export async function GET(request: NextRequest) {
     if (key !== "endpoint") params.set(key, value);
   });
 
-  const res = await fetch(`${TMDB_BASE}${endpoint}?${params}`, {
-    next: { revalidate: 3600 },
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-  if (!res.ok) {
-    return NextResponse.json({ error: "TMDB API error" }, { status: res.status });
+  try {
+    const res = await fetch(`${TMDB_BASE}${endpoint}?${params}`, {
+      next: { revalidate: 3600 },
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      return NextResponse.json({ error: "TMDB API error" }, { status: res.status });
+    }
+
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error && error.name === 'AbortError') {
+      return NextResponse.json({ error: "Request timeout" }, { status: 504 });
+    }
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-
-  const data = await res.json();
-  return NextResponse.json(data);
 }
