@@ -2,10 +2,6 @@ import { cookies } from "next/headers";
 import { getByGenreDiscover } from "@/lib/tmdb/client";
 import GenrePageClient from "@/components/browse/GenrePageClient";
 import type { ContentRow } from "@/types";
-import { scifiConfig } from "@/lib/particles/configs";
-
-// LUMINA: Sci-Fi page accent color - electric cyan
-const SCIFI_ACCENT = "#00D4FF";
 
 export default async function SciFiPage() {
   const cookieStore = await cookies();
@@ -25,16 +21,5 @@ export default async function SciFiPage() {
     { title: "More Sci-Fi Movies", items: moviesPage2.results, mediaType: "movie" },
   ];
 
-  return (
-    <div style={{ "--accent": SCIFI_ACCENT, background: scifiConfig.background } as React.CSSProperties}>
-      <GenrePageClient 
-        title="Sci-Fi" 
-        accentColor={SCIFI_ACCENT} 
-        rows={rows} 
-        profileId={profileId} 
-        particleConfig={scifiConfig}
-        tagline="Explore the future"
-      />
-    </div>
-  );
+  return <GenrePageClient title="Sci-Fi" accentColor="#38bdf8" rows={rows} profileId={profileId} />;
 }

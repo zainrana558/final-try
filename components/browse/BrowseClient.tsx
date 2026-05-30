@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import HeroSection from "./HeroSection";
+import HeroBanner from "./HeroBanner";
 import ContentRow from "./ContentRow";
 import GenreBanner from "./GenreBanner";
 import DetailModal from "@/components/modals/DetailModal";
@@ -12,10 +12,9 @@ interface BrowseClientProps {
   heroItems: MediaItem[];
   rows: ContentRowType[];
   profileId: string | null;
-  accentColor?: string;
 }
 
-export default function BrowseClient({ heroItems, rows, profileId, accentColor = "#E50914" }: BrowseClientProps) {
+export default function BrowseClient({ heroItems, rows, profileId }: BrowseClientProps) {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
   const [playingItem, setPlayingItem] = useState<MediaItem | null>(null);
 
@@ -38,34 +37,25 @@ export default function BrowseClient({ heroItems, rows, profileId, accentColor =
     setPlayingItem(item);
   }
 
-  function handleAddToList(item: MediaItem) {
-    // TODO: Implement add to list functionality
-  }
-
   return (
     <>
-      {/* LUMINA: Hero section with auto-advancing slides */}
-      <HeroSection
-        slides={heroItems}
+      <HeroBanner
+        items={heroItems}
         onPlay={handlePlay}
         onInfo={handleItemClick}
-        onAddToList={handleAddToList}
       />
 
-      {/* LUMINA: Content rows */}
-      <div className="relative z-10 pb-16">
+      <div className="-mt-16 relative z-10 pb-16">
         <GenreBanner />
 
         <div className="space-y-0">
-          {rows.map((row, index) => (
+          {rows.map((row) => (
             <ContentRow
               key={row.title}
-              eyebrow={index === 0 ? "FEATURED" : undefined}
               title={row.title}
               items={row.items}
               onItemClick={handleItemClick}
               mediaType={row.mediaType}
-              variant={row.title === "Continue Watching" ? "continue-watching" : "default"}
             />
           ))}
         </div>

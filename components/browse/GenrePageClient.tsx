@@ -3,26 +3,17 @@
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import ContentRow from "./ContentRow";
-import GenreHeader from "./GenreHeader";
-import ParticleLayer from "@/components/particles/ParticleLayer";
-import GSAPVignette from "@/components/effects/GSAPVignette";
-import GSAPSpeedLines from "@/components/effects/GSAPSpeedLines";
-import FramerPulse from "@/components/effects/FramerPulse";
-import SciFiEffects from "@/components/effects/SciFiEffects";
 import DetailModal from "@/components/modals/DetailModal";
 import VideoPlayer from "@/components/modals/VideoPlayer";
 import type { MediaItem, ContentRow as ContentRowType } from "@/types";
-import type { ParticleConfig } from "@/lib/particles/configs";
 
 interface GenrePageClientProps {
   title: string;
   accentColor: string;
   rows: ContentRowType[];
   profileId: string | null;
-  particleConfig?: ParticleConfig;
-  tagline?: string;
 }
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
@@ -46,14 +37,7 @@ const navVariant = {
   show: { opacity: 1, y: 0, transition: { ease: EASE, duration: 0.4 } },
 };
 
-export default function GenrePageClient({ 
-  title, 
-  accentColor, 
-  rows, 
-  profileId, 
-  particleConfig,
-  tagline 
-}: GenrePageClientProps) {
+export default function GenrePageClient({ title, accentColor, rows, profileId }: GenrePageClientProps) {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
   const [playingItem, setPlayingItem] = useState<MediaItem | null>(null);
 
@@ -72,102 +56,42 @@ export default function GenrePageClient({
     setPlayingItem(item);
   }
 
-  // LUMINA: Render extra effects based on particle config
-  const renderExtraEffects = () => {
-    if (!particleConfig?.extraEffects) return null;
-
-    switch (particleConfig.extraEffects) {
-      case "gsap-vignette":
-        return <GSAPVignette />;
-      case "gsap-speedlines":
-        return <GSAPSpeedLines accentColor={accentColor} />;
-      case "framer-pulse":
-        return <FramerPulse count={3} />;
-      case "gsap-scanline":
-        return <SciFiEffects accentColor={accentColor} />;
-      case "css-grid":
-        return <SciFiEffects accentColor={accentColor} />;
-      default:
-        return null;
-    }
-  };
-
   return (
-    <div className="min-h-[100dvh] relative">
-      {/* LUMINA: Particle Layer */}
-      <AnimatePresence mode="wait">
-        {particleConfig && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <ParticleLayer config={particleConfig} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* LUMINA: Extra Effects */}
-      <AnimatePresence mode="wait">
-        {particleConfig && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {renderExtraEffects()}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* LUMINA: Sub-navbar */}
+    <div className="min-h-[100dvh]">
+      {/* Sub-navbar */}
       <motion.div
         variants={navVariant}
         initial="hidden"
         animate="show"
-        className="sticky top-0 z-20 flex items-center gap-4 px-4 md:px-8 py-4"
+        className="sticky top-0 z-10 flex items-center gap-4 px-4 md:px-8 py-4"
         style={{
-          background: "var(--sidebar-bg)",
-          borderBottom: "1px solid var(--border)",
+          background: "rgba(10,10,10,0.9)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          backdropFilter: "blur(12px)",
         }}
       >
         <Link
           href="/browse"
-          className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-100"
-          style={{ border: "1px solid var(--border)" }}
-          onMouseEnter={(e) => e.currentTarget.style.background = "var(--hover-surface)"}
-          onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+          className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:bg-white/10"
+          style={{ border: "1px solid rgba(255,255,255,0.1)" }}
         >
-          <ArrowLeft className="h-4 w-4" style={{ color: "var(--text-primary)" }} />
+          <ArrowLeft className="h-4 w-4 text-white" />
         </Link>
         <div className="flex items-center gap-3">
           <div
-            className="w-1 h-6"
-            style={{ background: accentColor }}
+            className="w-1 h-6 rounded-full"
+            style={{ background: `linear-gradient(180deg, ${accentColor}, ${accentColor}88)` }}
           />
-          <h1 
-            className="text-2xl font-bold tracking-tight"
-            style={{ color: "var(--text-primary)" }}
-          >
-            {title}
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white">{title}</h1>
         </div>
       </motion.div>
 
-      {/* LUMINA: Genre Header */}
-      <div style={{ position: "relative", zIndex: 10 }}>
-        <GenreHeader title={title} tagline={tagline} accentColor={accentColor} />
-      </div>
-
-      {/* LUMINA: Content rows */}
+      {/* Content rows */}
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
         className="py-8 space-y-0"
-        style={{ position: "relative", zIndex: 10 }}
       >
         {rows.map((row) => (
           <motion.div key={row.title} variants={item}>

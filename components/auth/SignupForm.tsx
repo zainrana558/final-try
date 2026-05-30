@@ -41,7 +41,7 @@ export default function SignupForm() {
     });
 
     if (error) {
-      setError("Failed to create account. Please try again.");
+      setError(error.message);
       setLoading(false);
     } else {
       router.push("/profiles");
@@ -56,7 +56,7 @@ export default function SignupForm() {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
-    if (error) setError("Failed to sign up. Please try again.");
+    if (error) setError(error.message);
   }
 
   return (

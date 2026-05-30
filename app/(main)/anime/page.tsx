@@ -2,10 +2,6 @@ import { cookies } from "next/headers";
 import { getByGenreDiscover } from "@/lib/tmdb/client";
 import GenrePageClient from "@/components/browse/GenrePageClient";
 import type { ContentRow } from "@/types";
-import { animeConfig } from "@/lib/particles/configs";
-
-// LUMINA: Anime page accent color - sakura pink
-const ANIME_ACCENT = "#FF6B9D";
 
 export default async function AnimePage() {
   const cookieStore = await cookies();
@@ -23,15 +19,11 @@ export default async function AnimePage() {
   ];
 
   return (
-    <div style={{ "--accent": ANIME_ACCENT, background: animeConfig.background } as React.CSSProperties}>
-      <GenrePageClient
-        title="Anime"
-        accentColor={ANIME_ACCENT}
-        rows={rows}
-        profileId={profileId}
-        particleConfig={animeConfig}
-        tagline="Japanese animation at its finest"
-      />
-    </div>
+    <GenrePageClient
+      title="Anime"
+      accentColor="#f472b6"
+      rows={rows}
+      profileId={profileId}
+    />
   );
 }

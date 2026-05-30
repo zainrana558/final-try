@@ -2,10 +2,6 @@ import { cookies } from "next/headers";
 import { getByGenreDiscover } from "@/lib/tmdb/client";
 import GenrePageClient from "@/components/browse/GenrePageClient";
 import type { ContentRow } from "@/types";
-import { romanceConfig } from "@/lib/particles/configs";
-
-// LUMINA: Romance page accent color - rose
-const ROMANCE_ACCENT = "#FF4D8B";
 
 export default async function RomancePage() {
   const cookieStore = await cookies();
@@ -25,16 +21,5 @@ export default async function RomancePage() {
     { title: "More Romance Movies", items: moviesPage2.results, mediaType: "movie" },
   ];
 
-  return (
-    <div style={{ "--accent": ROMANCE_ACCENT, background: romanceConfig.background } as React.CSSProperties}>
-      <GenrePageClient 
-        title="Romance" 
-        accentColor={ROMANCE_ACCENT} 
-        rows={rows} 
-        profileId={profileId} 
-        particleConfig={romanceConfig}
-        tagline="Love stories that touch the heart"
-      />
-    </div>
-  );
+  return <GenrePageClient title="Romance" accentColor="#fb7185" rows={rows} profileId={profileId} />;
 }

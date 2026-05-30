@@ -5,25 +5,12 @@ async function tmdbFetch<T>(endpoint: string, params: Record<string, string> = {
   if (!apiKey) throw new Error("TMDB_API_KEY is not set");
 
   const searchParams = new URLSearchParams({ api_key: apiKey, ...params });
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const res = await fetch(`${BASE_URL}${endpoint}?${searchParams}`, {
+    next: { revalidate: 3600 },
+  });
 
-  try {
-    const res = await fetch(`${BASE_URL}${endpoint}?${searchParams}`, {
-      next: { revalidate: 3600 },
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-
-    if (!res.ok) throw new Error(`TMDB API error: ${res.status}`);
-    return res.json();
-  } catch (error) {
-    clearTimeout(timeoutId);
-    if (error instanceof Error && error.name === 'AbortError') {
-      throw new Error('TMDB API request timeout');
-    }
-    throw error;
-  }
+  if (!res.ok) throw new Error(`TMDB API error: ${res.status}`);
+  return res.json();
 }
 
 interface TMDBListResponse<T> {
