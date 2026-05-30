@@ -113,9 +113,10 @@ export default function DetailModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 pt-12"
+      className="fixed inset-0 z-50 overflow-y-auto"
       style={{ background: "rgba(0,0,0,0.85)" }}
     >
+      <div className="flex min-h-full items-start justify-center p-4 pt-12">
       <div
         className="relative w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl"
         style={{ background: "#111111", border: "1px solid rgba(255,255,255,0.07)" }}
@@ -369,6 +370,7 @@ export default function DetailModal({
             Failed to load details
           </div>
         )}
+      </div>
       </div>
     </div>
   );
