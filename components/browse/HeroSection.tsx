@@ -141,7 +141,7 @@ export default function HeroSection({
           {/* LUMINA: Buttons row */}
           <div className="flex gap-3">
             <button
-              onClick={() => onPlay?.({ ...item, media_type })}
+              onClick={() => onPlay?.(item)}
               className="flex items-center gap-2 px-5 font-semibold text-white transition-all duration-100"
               style={{
                 background: "var(--accent)",
@@ -157,7 +157,7 @@ export default function HeroSection({
             </button>
 
             <button
-              onClick={() => onAddToList?.({ ...item, media_type })}
+              onClick={() => onAddToList?.(item)}
               className="flex items-center gap-2 px-5 font-semibold text-white transition-all duration-100"
               style={{
                 background: "transparent",
@@ -180,7 +180,7 @@ export default function HeroSection({
             </button>
 
             <button
-              onClick={() => onInfo?.({ ...item, media_type })}
+              onClick={() => onInfo?.(item)}
               className="flex items-center gap-2 px-5 font-semibold text-white transition-all duration-100"
               style={{
                 background: "transparent",

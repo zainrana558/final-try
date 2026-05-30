@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { tsParticles } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
+import { useMemo } from "react";
+import Particles from "@tsparticles/react";
 import type { ParticleConfig } from "@/lib/particles/configs";
 
 interface ParticleLayerProps {
@@ -10,17 +9,12 @@ interface ParticleLayerProps {
 }
 
 export default function ParticleLayer({ config }: ParticleLayerProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const particlesRef = useRef<any>(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
+  const options = useMemo(() => {
     // LUMINA: Check for reduced motion preference
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // LUMINA: Adjust config for reduced motion
-    const adjustedConfig = prefersReducedMotion
+    return prefersReducedMotion
       ? {
           ...config.particles,
           particles: {
@@ -34,41 +28,12 @@ export default function ParticleLayer({ config }: ParticleLayerProps) {
           },
         }
       : config.particles;
-
-    const initParticles = async () => {
-      await loadSlim(tsParticles);
-
-      particlesRef.current = await tsParticles.load({
-        id: `particles-${config.type}`,
-        element: containerRef.current,
-        options: adjustedConfig,
-      });
-    };
-
-    initParticles();
-
-    // LUMINA: Pause particles when tab is not visible
-    const handleVisibilityChange = () => {
-      if (document.hidden && particlesRef.current) {
-        particlesRef.current.pause();
-      } else if (particlesRef.current) {
-        particlesRef.current.play();
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      if (particlesRef.current) {
-        particlesRef.current.destroy();
-      }
-    };
   }, [config]);
 
   return (
-    <div
-      ref={containerRef}
+    <Particles
+      id={`particles-${config.type}`}
+      options={options}
       className="fixed inset-0 pointer-events-none"
       style={{ zIndex: 0 }}
     />
