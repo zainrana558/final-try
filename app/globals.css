@@ -1,24 +1,71 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0a0a0a;
-  --color-foreground: #ededed;
-  --color-muted: #1a1a2e;
+  /* ============================================
+     PHASE 1: OLED BLACKS & PREMIUM DESIGN TOKENS
+     ============================================ */
+
+  /* Universal Canvas - Deep OLED Blacks */
+  --color-background: #000000;
+  --color-foreground: #fafafa;
+
+  /* Muted tones with depth */
+  --color-muted: #0a0a0a;
   --color-muted-foreground: #a1a1aa;
-  --color-card: #141428;
-  --color-card-foreground: #ededed;
-  --color-border: #27274a;
-  --color-input: #27274a;
-  --color-ring: #7c3aed;
-  --color-primary: #7c3aed;
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #1e1e3f;
-  --color-secondary-foreground: #ededed;
-  --color-accent: #7c3aed;
-  --color-destructive: #ef4444;
+
+  /* Cards with tactile depth */
+  --color-card: #050505;
+  --color-card-foreground: #fafafa;
+
+  /* Borders - Razor-sharp 1px aesthetic */
+  --color-border: #1f1f1f;
+  --color-input: #1a1a1a;
+
+  /* Primary accent - Cinematic white/silver */
+  --color-primary: #fafafa;
+  --color-primary-foreground: #000000;
+
+  /* Secondary - Premium dark gray */
+  --color-secondary: #141414;
+  --color-secondary-foreground: #fafafa;
+
+  /* Accent - Electric blue for primary actions */
+  --color-accent: #3b82f6;
+  --color-accent-foreground: #ffffff;
+
+  /* Destructive - Cold crimson */
+  --color-destructive: #dc2626;
   --color-destructive-foreground: #ffffff;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Typography */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  --font-serif: "Playfair Display", "Times New Roman", serif;
+
+  /* Genre-specific accent colors */
+  --color-anime-primary: #ff006e;
+  --color-anime-secondary: #ffbe0b;
+  --color-movie-primary: #b45309;
+  --color-movie-secondary: #fbbf24;
+  --color-tv-primary: #1e40af;
+  --color-tv-secondary: #3b82f6;
+  --color-scifi-primary: #00f0ff;
+  --color-scifi-secondary: #00ff66;
+  --color-horror-primary: #8b0000;
+  --color-horror-secondary: #1a1a1a;
+  --color-cartoon-primary: #f97316;
+  --color-cartoon-secondary: #14b8a6;
+  --color-action-primary: #78716c;
+  --color-action-secondary: #f97316;
+  --color-romance-primary: #4a0e17;
+  --color-romance-secondary: #be185d;
+  --color-comedy-primary: #fbbf24;
+  --color-comedy-secondary: #a855f7;
 }
+
+/* ============================================
+   CORE FOUNDATION STYLES
+   ============================================ */
 
 * {
   margin: 0;
@@ -28,6 +75,7 @@
 
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -36,11 +84,75 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
+/* ============================================
+   TACTILE DEPTH UTILITIES
+   ============================================ */
+
+/* Premium card depth without glassmorphism */
+.tactile-shadow {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.05),
+    0 4px 20px -2px rgba(0,0,0,0.9);
+}
+
+.tactile-shadow-lg {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.05),
+    0 8px 40px -4px rgba(0,0,0,0.95);
+}
+
+/* Razor-sharp border aesthetic */
+.border-tactile {
+  border: 1px solid var(--color-border);
+  box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.03);
+}
+
+/* ============================================
+   TYPOGRAPHY PRECISION
+   ============================================ */
+
+/* Ultra-compressed tracking for headings */
+.heading-xl {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.heading-lg {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.heading-md {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Monospace metadata with wide tracking */
+.metadata-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR - Premium dark
+   ============================================ */
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -48,10 +160,292 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 3px;
+  background: #1a1a1a;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #2a2a2a;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Hide scrollbar for horizontal carousels */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================================
+   HARDWARE SHIMMER SKELETON
+   ============================================ */
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 35%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.03) 65%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* ============================================
+   SPRING ANIMATION KEYFRAMES
+   ============================================ */
+
+@keyframes spring-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.97); }
+}
+
+@keyframes magnetic-pulse {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(2px, -1px); }
+  75% { transform: translate(-2px, 1px); }
+}
+
+@keyframes text-scramble {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes ambient-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255,255,255,0.1),
+                0 0 40px rgba(255,255,255,0.05);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255,255,255,0.15),
+                0 0 50px rgba(255,255,255,0.08);
+  }
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: rgba(255,255,255,0.1);
+  }
+  50% {
+    border-color: rgba(255,255,255,0.2);
+  }
+}
+
+/* ============================================
+   GENRE-SPECIFIC THEMES
+   ============================================ */
+
+/* Anime - High-energy cyberpunk */
+.theme-anime {
+  --accent-primary: #ff006e;
+  --accent-secondary: #ffbe0b;
+  --theme-glow: rgba(255, 0, 110, 0.3);
+}
+
+/* Movies - Vintage cinematic */
+.theme-movie {
+  --accent-primary: #b45309;
+  --accent-secondary: #fbbf24;
+  --theme-glow: rgba(180, 83, 9, 0.2);
+}
+
+/* TV Shows - Ultra-sleek modern */
+.theme-tv {
+  --accent-primary: #1e40af;
+  --accent-secondary: #3b82f6;
+  --theme-glow: rgba(59, 130, 246, 0.2);
+}
+
+/* Sci-Fi - Matrix-inspired */
+.theme-scifi {
+  --accent-primary: #00f0ff;
+  --accent-secondary: #00ff66;
+  --theme-glow: rgba(0, 240, 255, 0.3);
+}
+
+/* Horror - Blood crimson */
+.theme-horror {
+  --accent-primary: #8b0000;
+  --accent-secondary: #1a1a1a;
+  --theme-glow: rgba(139, 0, 0, 0.3);
+}
+
+/* Cartoon - Playful premium */
+.theme-cartoon {
+  --accent-primary: #f97316;
+  --accent-secondary: #14b8a6;
+  --theme-glow: rgba(249, 115, 22, 0.3);
+}
+
+/* Action - High-octane metallic */
+.theme-action {
+  --accent-primary: #78716c;
+  --accent-secondary: #f97316;
+  --theme-glow: rgba(249, 115, 22, 0.2);
+}
+
+/* Romance - Velvety rose */
+.theme-romance {
+  --accent-primary: #4a0e17;
+  --accent-secondary: #be185d;
+  --theme-glow: rgba(190, 24, 93, 0.2);
+}
+
+/* Comedy - Light premium */
+.theme-comedy {
+  --accent-primary: #fbbf24;
+  --accent-secondary: #a855f7;
+  --theme-glow: rgba(251, 191, 36, 0.2);
+}
+
+/* ============================================
+   CINEMATIC BACKLIGHTING
+   ============================================ */
+
+.backlight-glow {
+  position: relative;
+}
+
+.backlight-glow::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(
+    circle at center,
+    var(--theme-glow) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.backlight-glow:hover::before {
+  opacity: 1;
+}
+
+/* ============================================
+   INPUT STYLES - Clean, minimal, floating
+   ============================================ */
+
+.input-minimal {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #2a2a2a;
+  border-radius: 0;
+  padding: 0.75rem 0;
+  color: #fafafa;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.input-minimal:focus {
+  outline: none;
+  border-bottom-color: #fafafa;
+}
+
+.input-minimal::placeholder {
+  color: #5a5a5a;
+}
+
+/* ============================================
+   BUTTON STYLES - Premium tactile
+   ============================================ */
+
+.btn-tactile {
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.05),
+    0 4px 12px -2px rgba(0,0,0,0.5);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-tactile:hover {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.08),
+    0 6px 20px -4px rgba(0,0,0,0.7);
+}
+
+.btn-tactile:active {
+  transform: scale(0.97);
+  box-shadow:
+    inset 0 2px 4px 0 rgba(0,0,0,0.5),
+    0 2px 8px -2px rgba(0,0,0,0.3);
+}
+
+/* ============================================
+   FILM GRAIN OVERLAY (for movies)
+   ============================================ */
+
+.film-grain {
+  position: relative;
+}
+
+.film-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================
+   MANGA-STYLE GRID (for anime)
+   ============================================ */
+
+.manga-grid {
+  display: grid;
+  gap: 1px;
+  background: #1a1a1a;
+}
+
+.manga-grid > * {
+  background: #000000;
+}
+
+/* ============================================
+   LETTERBOX PADDING (for movies/tv)
+   ============================================ */
+
+.letterbox-padding {
+  padding-top: 12%;
+  padding-bottom: 12%;
+}
+
+@media (max-width: 768px) {
+  .letterbox-padding {
+    padding-top: 8%;
+    padding-bottom: 8%;
+  }
 }
