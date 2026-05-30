@@ -60,9 +60,11 @@ const containerVariants = {
   show: { transition: { staggerChildren: 0.06 } },
 };
 
+const EASE = [0.25, 0.46, 0.45, 0.94] as const;
+
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { ease: [0.25, 0.46, 0.45, 0.94], duration: 0.4 } },
+  show: { opacity: 1, y: 0, transition: { ease: EASE, duration: 0.4 } },
 };
 
 export default function GenreBanner() {
