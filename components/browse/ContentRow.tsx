@@ -90,7 +90,7 @@ export default function ContentRow({ title, items, onItemClick, mediaType }: Con
               key={item.id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: Math.min(i * 0.04, 0.4), duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ delay: Math.min(i * 0.04, 0.4), duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }}
             >
               <MediaCard item={item} onClick={onItemClick} mediaType={mediaType} />
             </motion.div>

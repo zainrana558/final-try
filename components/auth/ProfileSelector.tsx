@@ -79,7 +79,7 @@ export default function ProfileSelector({ profiles }: { profiles: Profile[] }) {
             key={profile.id}
             className="group relative"
             variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }}
-            transition={{ ease: [0.25, 0.46, 0.45, 0.94], duration: 0.4 }}
+            transition={{ ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number], duration: 0.4 }}
           >
             <motion.button
               onClick={() => !managing && selectProfile(profile.id)}
