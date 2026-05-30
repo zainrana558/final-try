@@ -122,8 +122,8 @@ export default function GenreBanner() {
               {/* Label bottom */}
               <div className="absolute bottom-0 left-0 right-0 px-3 py-3">
                 <p
-                  className="text-sm font-bold tracking-wide leading-none"
-                  style={{ color: genre.accent, textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}
+                  className="text-sm font-bold tracking-wide leading-none text-white"
+                  style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}
                 >
                   {genre.label}
                 </p>

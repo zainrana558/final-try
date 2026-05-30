@@ -38,7 +38,7 @@ export default function ContentRow({ title, items, onItemClick, mediaType }: Con
       </div>
 
       {/* Scroll row */}
-      <div className="group relative">
+      <div className="group relative" style={{ marginLeft: -8, marginRight: -8, paddingLeft: 8, paddingRight: 8 }}>
         <button
           onClick={() => scroll("left")}
           className="absolute -left-2 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:opacity-100 hover:scale-110"

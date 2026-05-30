@@ -19,8 +19,8 @@ export default function MyListClient({ items, profileId }: MyListClientProps) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center px-4">
         <div className="text-center">
-          <h2 className="text-2xl font-bold">Your list is empty</h2>
-          <p className="mt-2 text-muted-foreground">
+          <h2 className="text-2xl font-bold text-white">Your list is empty</h2>
+          <p className="mt-2 text-sm text-zinc-400">
             Browse movies and shows to add them to your list.
           </p>
         </div>
@@ -29,8 +29,14 @@ export default function MyListClient({ items, profileId }: MyListClientProps) {
   }
 
   return (
-    <div className="px-4 pt-4 md:px-8">
-      <h1 className="mb-6 text-2xl font-bold">My List</h1>
+    <div className="px-4 pt-8 pb-16 md:px-8">
+      <div className="flex items-center gap-3 mb-6">
+        <div
+          className="w-1 h-6 rounded-full flex-shrink-0"
+          style={{ background: "linear-gradient(180deg, #7c3aed, #ec4899)" }}
+        />
+        <h1 className="text-xl font-bold text-white tracking-tight">My List</h1>
+      </div>
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
         {items.map((item) => (
           <MediaCard
