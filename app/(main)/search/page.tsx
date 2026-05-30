@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import MediaCard from "@/components/browse/MediaCard";
 import DetailModal from "@/components/modals/DetailModal";
 import VideoPlayer from "@/components/modals/VideoPlayer";
 import type { MediaItem } from "@/types";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -22,18 +21,10 @@ export default function SearchPage() {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
   const [playingItem, setPlayingItem] = useState<MediaItem | null>(null);
 
-  // Fresh search whenever query changes — reset to page 1
   useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      setPage(1);
-      setTotalPages(1);
-      return;
-    }
-
+    if (!query.trim()) { setResults([]); setPage(1); setTotalPages(1); return; }
     const timeout = setTimeout(async () => {
-      setLoading(true);
-      setPage(1);
+      setLoading(true); setPage(1);
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&page=1`);
         if (res.ok) {
@@ -41,16 +32,12 @@ export default function SearchPage() {
           setResults(data.results || []);
           setTotalPages(data.total_pages ?? 1);
         }
-      } catch {
-        // network error — results stays empty
-      }
+      } catch {}
       setLoading(false);
     }, 400);
-
     return () => clearTimeout(timeout);
   }, [query]);
 
-  // Load next page and append — only called by the Load More button
   async function handleLoadMore() {
     const nextPage = page + 1;
     setLoadingMore(true);
@@ -62,9 +49,7 @@ export default function SearchPage() {
         setPage(nextPage);
         setTotalPages(data.total_pages ?? totalPages);
       }
-    } catch {
-      // network error — existing results unchanged
-    }
+    } catch {}
     setLoadingMore(false);
   }
 
@@ -74,82 +59,134 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="px-4 pt-4 md:px-8">
-      <div className="relative mx-auto max-w-xl">
-        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          type="text"
-          placeholder="Search movies, TV shows..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="pl-10 text-base"
-          autoFocus
-        />
+    <div className="min-h-screen px-4 pt-6 pb-16 md:px-8" style={{ background: "#050505" }}>
+      {/* Search input */}
+      <div className="mx-auto max-w-lg mb-8">
+        <div
+          className="relative flex items-center rounded-2xl overflow-hidden transition-all duration-200"
+          style={{ background: "#0a0a0a", border: "1px solid #1f1f1f" }}
+        >
+          <Search className="absolute left-4 h-4 w-4 flex-shrink-0" style={{ color: "#444" }} />
+          <input
+            type="text"
+            placeholder="Search movies, TV shows…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            autoFocus
+            className="w-full bg-transparent py-3.5 pl-11 pr-4 text-[14px] text-white outline-none placeholder:text-zinc-700"
+          />
+          {loading && (
+            <Loader2 className="absolute right-4 h-4 w-4 animate-spin" style={{ color: "#555" }} />
+          )}
+        </div>
       </div>
 
-      <div className="mt-8">
+      {/* Results */}
+      <AnimatePresence mode="wait">
         {loading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
+          >
+            {Array.from({ length: 14 }).map((_, i) => (
+              <div
+                key={i}
+                className="skeleton-shimmer rounded-xl"
+                style={{ aspectRatio: "2/3", animationDelay: `${i * 0.05}s` }}
+              />
+            ))}
+          </motion.div>
         ) : results.length > 0 ? (
-          <>
+          <motion.div
+            key="results"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* Result count */}
+            <div className="mb-4 flex items-center gap-2">
+              <div className="h-3.5 w-[2px] rounded-full" style={{ background: "linear-gradient(180deg, #7c3aed, #ec4899)" }} />
+              <p className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "#555" }}>
+                {results.length} results
+                {query && <span style={{ color: "#444" }}> for &ldquo;{query}&rdquo;</span>}
+              </p>
+            </div>
+
             <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
-              {results.map((item) => (
-                <MediaCard
+              {results.map((item, i) => (
+                <motion.div
                   key={item.id}
-                  item={item}
-                  onClick={setSelectedItem}
-                />
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: Math.min(i * 0.03, 0.5), duration: 0.3 }}
+                >
+                  <MediaCard item={item} onClick={setSelectedItem} />
+                </motion.div>
               ))}
             </div>
 
             {page < totalPages && (
-              <div className="mt-8 flex justify-center pb-12">
-                <Button
-                  variant="outline"
+              <div className="mt-10 flex justify-center">
+                <motion.button
                   onClick={handleLoadMore}
                   disabled={loadingMore}
+                  className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[13px] font-semibold text-white transition-all"
+                  style={{
+                    background: loadingMore ? "#111" : "linear-gradient(135deg, #7c3aed, #a855f7)",
+                    border: loadingMore ? "1px solid #1f1f1f" : "none",
+                    boxShadow: loadingMore ? "none" : "0 4px 20px rgba(124,58,237,0.3)",
+                  }}
+                  whileHover={!loadingMore ? { boxShadow: "0 6px 28px rgba(124,58,237,0.5)" } : {}}
+                  whileTap={{ scale: 0.97 }}
                 >
                   {loadingMore ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    "Load More"
-                  )}
-                </Button>
+                    <><Loader2 className="h-4 w-4 animate-spin" style={{ color: "#555" }} /><span style={{ color: "#555" }}>Loading…</span></>
+                  ) : "Load More"}
+                </motion.button>
               </div>
             )}
-          </>
+          </motion.div>
         ) : query.trim() ? (
-          <p className="py-12 text-center text-muted-foreground">
-            No results found for &ldquo;{query}&rdquo;
-          </p>
+          <motion.div
+            key="empty"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="py-24 text-center"
+          >
+            <p className="text-5xl mb-4">🔍</p>
+            <p className="text-white font-semibold mb-2">No results found</p>
+            <p className="text-[13px]" style={{ color: "#555" }}>
+              Nothing matched &ldquo;{query}&rdquo; — try a different search.
+            </p>
+          </motion.div>
         ) : (
-          <p className="py-12 text-center text-muted-foreground">
-            Start typing to search for movies and TV shows
-          </p>
+          <motion.div
+            key="hint"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="py-24 text-center"
+          >
+            <p className="text-5xl mb-4">🎬</p>
+            <p className="text-white font-semibold mb-2">Find your next watch</p>
+            <p className="text-[13px]" style={{ color: "#555" }}>Search movies, TV shows, and anime above.</p>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
 
       {selectedItem && (
         <DetailModal
           mediaId={selectedItem.id}
           mediaType={(selectedItem.media_type || "movie") as "movie" | "tv"}
           onClose={() => setSelectedItem(null)}
-          onPlay={(item) => {
-            setSelectedItem(null);
-            setPlayingItem(item);
-          }}
+          onPlay={(item) => { setSelectedItem(null); setPlayingItem(item); }}
           profileId={getCookieProfileId()}
         />
       )}
-
       {playingItem && (
-        <VideoPlayer
-          item={playingItem}
-          onClose={() => setPlayingItem(null)}
-          profileId={getCookieProfileId()}
-        />
+        <VideoPlayer item={playingItem} onClose={() => setPlayingItem(null)} profileId={getCookieProfileId()} />
       )}
     </div>
   );
