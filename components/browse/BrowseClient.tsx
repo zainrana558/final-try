@@ -45,18 +45,20 @@ export default function BrowseClient({ heroItems, rows, profileId }: BrowseClien
         onInfo={handleItemClick}
       />
 
-      <div className="-mt-16 relative z-10 space-y-8 pb-12">
+      <div className="-mt-16 relative z-10 pb-16">
         <GenreBanner />
 
-        {rows.map((row) => (
-          <ContentRow
-            key={row.title}
-            title={row.title}
-            items={row.items}
-            onItemClick={handleItemClick}
-            mediaType={row.mediaType}
-          />
-        ))}
+        <div className="space-y-0">
+          {rows.map((row) => (
+            <ContentRow
+              key={row.title}
+              title={row.title}
+              items={row.items}
+              onItemClick={handleItemClick}
+              mediaType={row.mediaType}
+            />
+          ))}
+        </div>
       </div>
 
       {selectedItem && (

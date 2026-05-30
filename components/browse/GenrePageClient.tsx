@@ -22,7 +22,7 @@ const container = {
 };
 
 const item = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 24 },
   show: {
     opacity: 1,
     y: 0,
@@ -31,8 +31,8 @@ const item = {
 };
 
 const navVariant = {
-  hidden: { opacity: 0, y: -16 },
-  show: { opacity: 1, y: 0, transition: { ease: [0.25, 0.46, 0.45, 0.94], duration: 0.45 } },
+  hidden: { opacity: 0, y: -12 },
+  show: { opacity: 1, y: 0, transition: { ease: [0.25, 0.46, 0.45, 0.94], duration: 0.4 } },
 };
 
 export default function GenrePageClient({ title, accentColor, rows, profileId }: GenrePageClientProps) {
@@ -56,41 +56,40 @@ export default function GenrePageClient({ title, accentColor, rows, profileId }:
 
   return (
     <div className="min-h-[100dvh]">
-      {/* Frosted glass sub-navbar */}
+      {/* Sub-navbar */}
       <motion.div
         variants={navVariant}
         initial="hidden"
         animate="show"
-        className="sticky top-16 z-10 flex items-center gap-4 px-4 md:px-8 py-4"
+        className="sticky top-0 z-10 flex items-center gap-4 px-4 md:px-8 py-4"
         style={{
-          background: "rgba(0,0,0,0.55)",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
-          borderBottom: "1px solid rgba(255,255,255,0.07)",
+          background: "rgba(10,10,10,0.9)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          backdropFilter: "blur(12px)",
         }}
       >
         <Link
           href="/browse"
-          className="flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 hover:scale-105 active:scale-95"
-          style={{
-            background: "rgba(255,255,255,0.08)",
-            border: "1px solid rgba(255,255,255,0.14)",
-            minWidth: 44, minHeight: 44,
-          }}
+          className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:bg-white/10"
+          style={{ border: "1px solid rgba(255,255,255,0.1)" }}
         >
           <ArrowLeft className="h-4 w-4 text-white" />
         </Link>
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight" style={{ color: accentColor }}>
-          {title}
-        </h1>
+        <div className="flex items-center gap-3">
+          <div
+            className="w-1 h-6 rounded-full"
+            style={{ background: `linear-gradient(180deg, ${accentColor}, ${accentColor}88)` }}
+          />
+          <h1 className="text-2xl font-bold tracking-tight text-white">{title}</h1>
+        </div>
       </motion.div>
 
-      {/* Rows with stagger */}
+      {/* Content rows */}
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
-        className="space-y-8 py-6 pb-16"
+        className="py-8 space-y-0"
       >
         {rows.map((row) => (
           <motion.div key={row.title} variants={item}>

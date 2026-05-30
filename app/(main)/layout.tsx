@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Navbar from "@/components/layout/Navbar";
 import MobileNav from "@/components/layout/MobileNav";
+import Sidebar from "@/components/layout/Sidebar";
 
 export default async function MainLayout({
   children,
@@ -12,8 +13,22 @@ export default async function MainLayout({
 
   return (
     <div className="min-h-screen">
-      <Navbar isGuest={!user} />
-      <main className="pb-20 pt-16 md:pb-0">{children}</main>
+      {/* Desktop sidebar */}
+      <Sidebar isGuest={!user} />
+
+      {/* Mobile top navbar */}
+      <div className="md:hidden">
+        <Navbar isGuest={!user} />
+      </div>
+
+      {/* Main content — offset on desktop */}
+      <main
+        className="pb-20 pt-16 md:pb-0 md:pt-0 md:ml-[240px]"
+      >
+        {children}
+      </main>
+
+      {/* Mobile bottom nav */}
       <MobileNav isGuest={!user} />
     </div>
   );

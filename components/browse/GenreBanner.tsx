@@ -7,219 +7,131 @@ const genres = [
   {
     label: "Anime",
     href: "/anime",
+    gradient: "linear-gradient(135deg, #581c87 0%, #831843 100%)",
     accent: "#f472b6",
-    glow: "rgba(244,114,182,0.35)",
-    animation: `
-      @keyframes petalFall {
-        0%   { transform: translateY(-20px) rotate(0deg);   opacity: 0; }
-        10%  { opacity: 1; }
-        90%  { opacity: 0.8; }
-        100% { transform: translateY(140px) rotate(360deg); opacity: 0; }
-      }
-    `,
-    particles: ["🌸", "🌸", "🌺", "🌸"],
-    bg: "linear-gradient(135deg, #1a0a14 0%, #3d0a2e 100%)",
+    icon: "🌸",
   },
   {
     label: "Cartoon",
     href: "/cartoon",
-    accent: "#4ade80",
-    glow: "rgba(74,222,128,0.35)",
-    animation: `
-      @keyframes leafDrift {
-        0%   { transform: translateX(0) translateY(-10px) rotate(0deg);   opacity: 0; }
-        10%  { opacity: 1; }
-        50%  { transform: translateX(12px) translateY(60px) rotate(180deg); }
-        100% { transform: translateX(-8px) translateY(130px) rotate(360deg); opacity: 0; }
-      }
-    `,
-    particles: ["🍃", "🍀", "🍃", "🌿"],
-    bg: "linear-gradient(135deg, #071a0d 0%, #0d3320 100%)",
+    gradient: "linear-gradient(135deg, #b45309 0%, #c2410c 100%)",
+    accent: "#fbbf24",
+    icon: "🎨",
   },
   {
     label: "Horror",
     href: "/horror",
+    gradient: "linear-gradient(135deg, #1c0505 0%, #1f2937 100%)",
     accent: "#ef4444",
-    glow: "rgba(239,68,68,0.35)",
-    animation: `
-      @keyframes ashFloat {
-        0%   { transform: translateY(140px) scale(1);   opacity: 0; }
-        10%  { opacity: 0.6; }
-        90%  { opacity: 0.3; }
-        100% { transform: translateY(-10px) scale(0.5); opacity: 0; }
-      }
-    `,
-    particles: ["💀", "🕷️", "💀", "🕸️"],
-    bg: "linear-gradient(135deg, #1a0000 0%, #2d0000 100%)",
+    icon: "💀",
   },
   {
     label: "Comedy",
     href: "/comedy",
+    gradient: "linear-gradient(135deg, #b45309 0%, #d97706 100%)",
     accent: "#facc15",
-    glow: "rgba(250,204,21,0.35)",
-    animation: `
-      @keyframes confettiFall {
-        0%   { transform: translateY(-10px) rotate(0deg);   opacity: 0; }
-        10%  { opacity: 1; }
-        100% { transform: translateY(140px) rotate(720deg); opacity: 0; }
-      }
-    `,
-    particles: ["🎉", "😂", "🎊", "✨"],
-    bg: "linear-gradient(135deg, #1a1500 0%, #332900 100%)",
+    icon: "😂",
   },
   {
     label: "Action",
     href: "/action",
-    accent: "#f97316",
-    glow: "rgba(249,115,22,0.35)",
-    animation: `
-      @keyframes emberRise {
-        0%   { transform: translateY(140px) scale(1);   opacity: 0; }
-        15%  { opacity: 1; }
-        85%  { opacity: 0.7; }
-        100% { transform: translateY(-10px) scale(0.3); opacity: 0; }
-      }
-    `,
-    particles: ["💥", "🔥", "⚡", "🔥"],
-    bg: "linear-gradient(135deg, #1a0800 0%, #331500 100%)",
+    gradient: "linear-gradient(135deg, #1e3a5f 0%, #164e63 100%)",
+    accent: "#38bdf8",
+    icon: "⚡",
   },
   {
     label: "Romance",
     href: "/romance",
+    gradient: "linear-gradient(135deg, #831843 0%, #e11d48 100%)",
     accent: "#fb7185",
-    glow: "rgba(251,113,133,0.35)",
-    animation: `
-      @keyframes heartFloat {
-        0%   { transform: translateY(0) scale(1);    opacity: 0; }
-        15%  { opacity: 1; }
-        50%  { transform: translateY(-60px) scale(1.2); }
-        100% { transform: translateY(-130px) scale(0.5); opacity: 0; }
-      }
-    `,
-    particles: ["❤️", "💕", "💗", "💖"],
-    bg: "linear-gradient(135deg, #1a0008 0%, #330010 100%)",
+    icon: "❤️",
   },
   {
     label: "Sci-Fi",
     href: "/scifi",
-    accent: "#38bdf8",
-    glow: "rgba(56,189,248,0.35)",
-    animation: `
-      @keyframes starTwinkle {
-        0%, 100% { opacity: 0.2; transform: scale(0.8); }
-        50%       { opacity: 1;   transform: scale(1.4); }
-      }
-    `,
-    particles: ["⭐", "🌟", "✨", "💫"],
-    bg: "linear-gradient(135deg, #00101a 0%, #001f33 100%)",
+    gradient: "linear-gradient(135deg, #1e1b4b 0%, #1d4ed8 100%)",
+    accent: "#60a5fa",
+    icon: "🚀",
   },
 ];
 
 const containerVariants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.06 } },
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { ease: [0.25, 0.46, 0.45, 0.94], duration: 0.5 } },
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { ease: [0.25, 0.46, 0.45, 0.94], duration: 0.4 } },
 };
 
 export default function GenreBanner() {
   const router = useRouter();
 
   return (
-    <section className="px-4 md:px-8 py-8">
-      <motion.h2
-        className="text-lg font-semibold md:text-xl mb-4"
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ ease: [0.25, 0.46, 0.45, 0.94], duration: 0.45 }}
-      >
-        Browse by Genre
-      </motion.h2>
+    <section className="px-4 md:px-8 py-6">
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #7c3aed, #ec4899)" }} />
+        <h2 className="text-xl font-bold text-white tracking-tight">Browse by Genre</h2>
+      </div>
 
-      <div className="overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+      <div
+        className="overflow-x-auto"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true, margin: "-40px" }}
           className="flex gap-3 pb-2"
           style={{ width: "max-content" }}
         >
           {genres.map((genre) => (
-            <motion.div
+            <motion.button
               key={genre.label}
               variants={cardVariants}
-              whileHover={{ scale: 1.06 }}
-              transition={{ type: "spring", stiffness: 60, damping: 20 }}
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 300, damping: 24 }}
               onClick={() => router.push(genre.href)}
-              className="relative overflow-hidden cursor-pointer flex-shrink-0 rounded-2xl flex flex-col items-center justify-end"
+              className="relative flex-shrink-0 overflow-hidden rounded-xl cursor-pointer"
               style={{
-                width: "clamp(140px, 12vw, 180px)",
-                height: "clamp(170px, 14vw, 220px)",
-                background: genre.bg,
-                border: "1px solid rgba(255,255,255,0.08)",
-                transition: "box-shadow 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 24px 4px ${genre.glow}`;
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
+                width: 140,
+                height: 120,
+                background: genre.gradient,
+                border: "1px solid rgba(255,255,255,0.07)",
               }}
             >
-              {/* Inject keyframes */}
-              <style>{genre.animation}</style>
-
-              {/* Particle preview */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {genre.particles.map((p, i) => (
-                  <span
-                    key={i}
-                    className="absolute text-lg select-none"
-                    style={{
-                      left: `${15 + i * 20}%`,
-                      top: genre.label === "Action" || genre.label === "Sci-Fi" ? "80%" : "10%",
-                      animation: `${getAnimName(genre.label)} ${1.8 + i * 0.4}s ease-in-out ${i * 0.3}s infinite`,
-                    }}
-                  >
-                    {p}
-                  </span>
-                ))}
-              </div>
-
-              {/* Frosted label */}
+              {/* Subtle noise texture overlay */}
               <div
-                className="relative z-10 w-full px-3 py-3 text-center"
+                className="absolute inset-0"
                 style={{
-                  background: "rgba(0,0,0,0.5)",
-                  backdropFilter: "blur(8px)",
+                  background: "radial-gradient(ellipse at top left, rgba(255,255,255,0.06) 0%, transparent 60%)",
                 }}
+              />
+
+              {/* Icon top-right */}
+              <span
+                className="absolute top-3 right-3 text-2xl select-none pointer-events-none"
+                style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))" }}
               >
-                <span className="text-sm font-semibold" style={{ color: genre.accent }}>
+                {genre.icon}
+              </span>
+
+              {/* Label bottom */}
+              <div className="absolute bottom-0 left-0 right-0 px-3 py-3">
+                <p
+                  className="text-sm font-bold tracking-wide leading-none"
+                  style={{ color: genre.accent, textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}
+                >
                   {genre.label}
-                </span>
+                </p>
               </div>
-            </motion.div>
+            </motion.button>
           ))}
         </motion.div>
       </div>
     </section>
   );
-}
-
-function getAnimName(label: string) {
-  const map: Record<string, string> = {
-    Anime: "petalFall",
-    Cartoon: "leafDrift",
-    Horror: "ashFloat",
-    Comedy: "confettiFall",
-    Action: "emberRise",
-    Romance: "heartFloat",
-    "Sci-Fi": "starTwinkle",
-  };
-  return map[label] ?? "petalFall";
 }
