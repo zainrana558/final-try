@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { X, ChevronDown, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronDown, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { MediaItem, Season, Episode } from "@/types";
 import { getTitle } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
 
-interface EmbedProvider { name: string; url: string; }
+interface EmbedProvider {
+  name: string;
+  url: string;
+}
 
 interface VideoPlayerProps {
   item: MediaItem;
@@ -17,7 +20,11 @@ interface VideoPlayerProps {
 }
 
 export default function VideoPlayer({
-  item, onClose, profileId, initialSeason = 1, initialEpisode = 1,
+  item,
+  onClose,
+  profileId,
+  initialSeason = 1,
+  initialEpisode = 1,
 }: VideoPlayerProps) {
   const [embedUrl, setEmbedUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -35,7 +42,10 @@ export default function VideoPlayer({
     setLoading(true);
     try {
       let url = `/api/embed?tmdb=${item.id}&type=${mediaType}`;
-      if (mediaType === "tv") url += `&season=${season}&episode=${episode}`;
+      if (mediaType === "tv") {
+        url += `&season=${season}&episode=${episode}`;
+      }
+
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
@@ -44,7 +54,9 @@ export default function VideoPlayer({
         setProviderIndex(0);
         setEmbedUrl(list[0]?.url ?? data.url ?? null);
       }
-    } catch {}
+    } catch {
+      // network error — embedUrl stays null, UI shows "Unable to load player"
+    }
     setLoading(false);
   }, [item.id, mediaType, season, episode]);
 
@@ -56,13 +68,19 @@ export default function VideoPlayer({
     }
   };
 
-  useEffect(() => { fetchEmbed(); }, [fetchEmbed]);
+  useEffect(() => {
+    fetchEmbed();
+  }, [fetchEmbed]);
 
   useEffect(() => {
     if (mediaType !== "tv") return;
     fetch(`/api/tmdb?endpoint=/tv/${item.id}`)
       .then((r) => r.json())
-      .then((data) => { if (data.seasons) setSeasons(data.seasons.filter((s: Season) => s.season_number > 0)); })
+      .then((data) => {
+        if (data.seasons) {
+          setSeasons(data.seasons.filter((s: Season) => s.season_number > 0));
+        }
+      })
       .catch(() => {});
   }, [item.id, mediaType]);
 
@@ -70,7 +88,9 @@ export default function VideoPlayer({
     if (mediaType !== "tv") return;
     fetch(`/api/tmdb?endpoint=/tv/${item.id}/season/${season}`)
       .then((r) => r.json())
-      .then((data) => { if (data.episodes) setEpisodes(data.episodes); })
+      .then((data) => {
+        if (data.episodes) setEpisodes(data.episodes);
+      })
       .catch(() => {});
   }, [item.id, mediaType, season]);
 
@@ -80,11 +100,18 @@ export default function VideoPlayer({
       try {
         const { saveProgress } = await import("@/actions/progress");
         await saveProgress({
-          profile_id: profileId, media_id: item.id, media_type: mediaType as "movie" | "tv",
-          title: getTitle(item), poster_path: item.poster_path, progress: 0, duration: 0,
+          profile_id: profileId,
+          media_id: item.id,
+          media_type: mediaType as "movie" | "tv",
+          title: getTitle(item),
+          poster_path: item.poster_path,
+          progress: 0,
+          duration: 0,
           ...(mediaType === "tv" ? { season_number: season, episode_number: episode } : {}),
         });
-      } catch {}
+      } catch {
+        // ignore
+      }
     }, 15000);
     return () => clearInterval(interval);
   }, [profileId, item, mediaType, season, episode, embedUrl]);
@@ -98,91 +125,55 @@ export default function VideoPlayer({
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[60]" style={{ background: "#000" }}>
-      {/* Top controls */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-3"
-        style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)" }}
-      >
-        <div className="flex items-center gap-3">
-          <motion.button
-            onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full"
-            style={{ background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.1)" }}
-            whileHover={{ background: "rgba(255,255,255,0.1)" }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <X className="h-4 w-4 text-white" />
-          </motion.button>
-          {mediaType === "tv" && (
-            <span className="text-[12px] text-zinc-400" style={{ fontFamily: "var(--font-mono)" }}>
-              {getTitle(item)} — S{season} E{episode}
-              {episodes[episode - 1] ? ` · ${episodes[episode - 1].name}` : ""}
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          {providers.length > 1 && (
-            <div className="relative">
-              <motion.button
-                onClick={() => setShowServers(!showServers)}
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] text-zinc-300"
-                style={{ background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.1)" }}
-                whileHover={{ background: "rgba(255,255,255,0.08)" }}
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                {providers[providerIndex]?.name ?? "Server"}
-              </motion.button>
-              <AnimatePresence>
-                {showServers && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 6, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 6, scale: 0.96 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-1.5 w-40 rounded-xl p-1.5 shadow-2xl"
-                    style={{ background: "#0a0a0a", border: "1px solid #1f1f1f" }}
+    <div className="fixed inset-0 z-[60] bg-black">
+      <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
+        {providers.length > 1 && (
+          <div className="relative">
+            <button
+              onClick={() => setShowServers(!showServers)}
+              className="flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-2 text-sm text-white hover:bg-black/80"
+            >
+              <RefreshCw className="h-4 w-4" />
+              {providers[providerIndex]?.name ?? "Server"}
+            </button>
+            {showServers && (
+              <div className="absolute right-0 top-full mt-1 w-40 rounded-lg bg-zinc-900 p-1 shadow-lg">
+                {providers.map((p, i) => (
+                  <button
+                    key={p.name}
+                    onClick={() => switchProvider(i)}
+                    className={`w-full rounded-md px-3 py-2 text-left text-sm transition-colors ${
+                      i === providerIndex
+                        ? "bg-primary text-white"
+                        : "text-zinc-300 hover:bg-zinc-800"
+                    }`}
                   >
-                    {providers.map((p, i) => (
-                      <button
-                        key={p.name}
-                        onClick={() => switchProvider(i)}
-                        className="w-full rounded-lg px-3 py-2 text-left text-[12px] transition-colors duration-150"
-                        style={{
-                          background: i === providerIndex ? "rgba(124,58,237,0.15)" : "transparent",
-                          color: i === providerIndex ? "#c4b5fd" : "#888",
-                        }}
-                      >
-                        {p.name}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
-        </div>
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        <button
+          onClick={onClose}
+          className="rounded-full bg-black/60 p-2 text-white hover:bg-black/80"
+        >
+          <X className="h-6 w-6" />
+        </button>
       </div>
 
-      {/* Player */}
       <div className="flex h-full flex-col">
         <div className="relative flex-1">
           {loading ? (
             <div className="flex h-full items-center justify-center">
-              <div className="relative">
-                <div
-                  className="h-10 w-10 rounded-full border-2 animate-spin"
-                  style={{ borderColor: "#1f1f1f", borderTopColor: "#7c3aed" }}
-                />
-                <div
-                  className="absolute inset-0 rounded-full animate-ping opacity-20"
-                  style={{ border: "2px solid #7c3aed" }}
-                />
-              </div>
+              <div className="h-10 w-10 animate-spin rounded-full border-2 border-primary border-t-transparent" />
             </div>
           ) : embedUrl ? (
             <iframe
@@ -192,125 +183,77 @@ export default function VideoPlayer({
               allowFullScreen
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-[13px]" style={{ color: "#444" }}>
+            <div className="flex h-full items-center justify-center text-muted-foreground">
               Unable to load player
             </div>
           )}
         </div>
 
-        {/* Episode panel for TV */}
         {mediaType === "tv" && (
-          <div style={{ background: "#060606", borderTop: "1px solid #141414" }}>
-            <div className="flex items-center justify-between px-4 py-3">
-              <div className="flex items-center gap-3">
-                {/* Prev/Next episode */}
-                <motion.button
-                  onClick={() => { if (episode > 1) setEpisode(e => e - 1); }}
-                  disabled={episode <= 1}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg transition-all"
-                  style={{ background: "#0f0f0f", border: "1px solid #1f1f1f", opacity: episode <= 1 ? 0.3 : 1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <ChevronLeft className="h-3.5 w-3.5 text-zinc-400" />
-                </motion.button>
-                <div>
-                  <p className="text-[13px] font-semibold text-white">{getTitle(item)}</p>
-                  <p className="text-[11px]" style={{ color: "#555", fontFamily: "var(--font-mono)" }}>
-                    S{String(season).padStart(2, "0")}·E{String(episode).padStart(2, "0")}
-                    {episodes[episode - 1] ? ` — ${episodes[episode - 1].name}` : ""}
-                  </p>
-                </div>
-                <motion.button
-                  onClick={() => { if (episode < episodes.length) setEpisode(e => e + 1); }}
-                  disabled={episode >= episodes.length}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg"
-                  style={{ background: "#0f0f0f", border: "1px solid #1f1f1f", opacity: episode >= episodes.length ? 0.3 : 1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <ChevronRight className="h-3.5 w-3.5 text-zinc-400" />
-                </motion.button>
+          <div className="bg-card p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold">{getTitle(item)}</h3>
+                <p className="text-sm text-muted-foreground">
+                  S{season} E{episode}
+                  {episodes[episode - 1] && ` — ${episodes[episode - 1].name}`}
+                </p>
               </div>
-
-              <motion.button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setShowEpisodes(!showEpisodes)}
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium text-zinc-400"
-                style={{ background: "#0f0f0f", border: "1px solid #1f1f1f" }}
-                whileHover={{ color: "#fff" }}
-                whileTap={{ scale: 0.96 }}
+                className="gap-1"
               >
                 Episodes
-                <motion.div animate={{ rotate: showEpisodes ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                  <ChevronDown className="h-3.5 w-3.5" />
-                </motion.div>
-              </motion.button>
+                <ChevronDown className={`h-4 w-4 transition-transform ${showEpisodes ? "rotate-180" : ""}`} />
+              </Button>
             </div>
 
-            <AnimatePresence>
-              {showEpisodes && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="overflow-hidden"
-                >
-                  <div className="px-4 pb-4 space-y-3">
-                    {/* Season tabs */}
-                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-                      {seasons.map((s) => (
-                        <motion.button
-                          key={s.season_number}
-                          onClick={() => { setSeason(s.season_number); setEpisode(1); }}
-                          className="whitespace-nowrap rounded-lg px-3.5 py-1.5 text-[12px] font-medium transition-colors"
-                          style={{
-                            background: season === s.season_number ? "rgba(124,58,237,0.15)" : "#0f0f0f",
-                            border: `1px solid ${season === s.season_number ? "rgba(124,58,237,0.4)" : "#1f1f1f"}`,
-                            color: season === s.season_number ? "#c4b5fd" : "#666",
-                          }}
-                          whileTap={{ scale: 0.96 }}
-                        >
-                          S{s.season_number}
-                        </motion.button>
-                      ))}
-                    </div>
-
-                    {/* Episode list */}
-                    <div className="max-h-44 space-y-1 overflow-y-auto no-scrollbar">
-                      {episodes.map((ep) => (
-                        <motion.button
-                          key={ep.episode_number}
-                          onClick={() => setEpisode(ep.episode_number)}
-                          className="w-full rounded-xl p-3 text-left transition-all"
-                          style={{
-                            background: episode === ep.episode_number ? "rgba(124,58,237,0.12)" : "#0a0a0a",
-                            border: `1px solid ${episode === ep.episode_number ? "rgba(124,58,237,0.25)" : "#141414"}`,
-                          }}
-                          whileHover={{ background: "rgba(255,255,255,0.03)" }}
-                          whileTap={{ scale: 0.99 }}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-[12px] font-semibold" style={{ color: episode === ep.episode_number ? "#c4b5fd" : "#bbb" }}>
-                              <span style={{ fontFamily: "var(--font-mono)", color: "#444", marginRight: 8 }}>
-                                {String(ep.episode_number).padStart(2, "0")}
-                              </span>
-                              {ep.name}
-                            </span>
-                            {ep.runtime && (
-                              <span className="text-[11px] ml-3" style={{ color: "#444", fontFamily: "var(--font-mono)" }}>
-                                {ep.runtime}m
-                              </span>
-                            )}
-                          </div>
-                          {ep.overview && (
-                            <p className="mt-1 line-clamp-1 text-[11px]" style={{ color: "#444" }}>{ep.overview}</p>
-                          )}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {showEpisodes && (
+              <div className="mt-4 space-y-3">
+                <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
+                  {seasons.map((s) => (
+                    <button
+                      key={s.season_number}
+                      onClick={() => { setSeason(s.season_number); setEpisode(1); }}
+                      className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm transition-colors ${
+                        season === s.season_number
+                          ? "bg-primary text-white"
+                          : "bg-secondary hover:bg-secondary/80"
+                      }`}
+                    >
+                      Season {s.season_number}
+                    </button>
+                  ))}
+                </div>
+                <div className="max-h-48 space-y-1 overflow-y-auto" style={{ scrollbarWidth: "thin" }}>
+                  {episodes.map((ep) => (
+                    <button
+                      key={ep.episode_number}
+                      onClick={() => setEpisode(ep.episode_number)}
+                      className={`w-full rounded-lg p-3 text-left transition-colors ${
+                        episode === ep.episode_number
+                          ? "bg-primary/20 border border-primary/30"
+                          : "hover:bg-secondary"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">
+                          {ep.episode_number}. {ep.name}
+                        </span>
+                        {ep.runtime && (
+                          <span className="text-xs text-muted-foreground">{ep.runtime}m</span>
+                        )}
+                      </div>
+                      {ep.overview && (
+                        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{ep.overview}</p>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

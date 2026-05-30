@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import MediaCard from "./MediaCard";
 import type { MediaItem } from "@/types";
-import { motion } from "framer-motion";
 
 interface ContentRowProps {
   title: string;
@@ -15,109 +14,61 @@ interface ContentRowProps {
 
 export default function ContentRow({ title, items, onItemClick, mediaType }: ContentRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
 
   function scroll(direction: "left" | "right") {
     if (!scrollRef.current) return;
     const amount = scrollRef.current.clientWidth * 0.75;
-    scrollRef.current.scrollBy({ left: direction === "left" ? -amount : amount, behavior: "smooth" });
-  }
-
-  function handleScroll() {
-    if (!scrollRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-    setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    scrollRef.current.scrollBy({
+      left: direction === "left" ? -amount : amount,
+      behavior: "smooth",
+    });
   }
 
   if (!items.length) return null;
 
   return (
-    <div className="mb-10 px-4 md:px-8">
+    <div className="space-y-3 px-4 md:px-8 mb-8">
       {/* Section header */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3">
         <div
-          className="h-4 w-[2px] rounded-full flex-shrink-0"
+          className="w-1 h-5 rounded-full flex-shrink-0"
           style={{ background: "linear-gradient(180deg, #7c3aed, #ec4899)" }}
         />
-        <h2
-          className="text-base font-semibold text-white tracking-tight"
-          style={{ letterSpacing: "-0.01em" }}
-        >
-          {title}
-        </h2>
-        <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, #1f1f1f, transparent)" }} />
-        <span
-          className="text-[10px] font-medium uppercase tracking-[0.12em]"
-          style={{ color: "#333", fontFamily: "var(--font-mono)" }}
-        >
-          {items.length} titles
-        </span>
+        <h2 className="text-xl font-bold text-white tracking-tight">{title}</h2>
       </div>
 
       {/* Scroll row */}
-      <div className="group relative" style={{ marginLeft: -4, marginRight: -4 }}>
-        {/* Left fade + arrow */}
-        <motion.div
-          className="absolute left-0 top-0 bottom-0 z-10 flex items-center pointer-events-none"
-          style={{ width: 60 }}
-          animate={{ opacity: canScrollLeft ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
+      <div className="group relative" style={{ marginLeft: -8, marginRight: -8, paddingLeft: 8, paddingRight: 8 }}>
+        <button
+          onClick={() => scroll("left")}
+          className="absolute -left-2 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:opacity-100 hover:scale-110"
+          style={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.1)" }}
         >
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(to right, #050505, transparent)" }}
-          />
-          <motion.button
-            onClick={() => scroll("left")}
-            className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full ml-1 pointer-events-auto transition-all duration-200"
-            style={{ background: "#0f0f0f", border: "1px solid #2a2a2a" }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <ChevronLeft className="h-4 w-4 text-white" />
-          </motion.button>
-        </motion.div>
+          <ChevronLeft className="h-5 w-5 text-white" />
+        </button>
 
         <div
           ref={scrollRef}
-          onScroll={handleScroll}
-          className="flex gap-3 overflow-x-auto scroll-smooth pb-3 pt-1 no-scrollbar px-1"
+          className="flex gap-3 overflow-x-auto scroll-smooth pb-2"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {items.map((item, i) => (
-            <motion.div
+          {items.map((item) => (
+            <MediaCard
               key={item.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: Math.min(i * 0.04, 0.4), duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }}
-            >
-              <MediaCard item={item} onClick={onItemClick} mediaType={mediaType} />
-            </motion.div>
+              item={item}
+              onClick={onItemClick}
+              mediaType={mediaType}
+            />
           ))}
         </div>
 
-        {/* Right fade + arrow */}
-        <motion.div
-          className="absolute right-0 top-0 bottom-0 z-10 flex items-center justify-end pointer-events-none"
-          style={{ width: 60 }}
-          animate={{ opacity: canScrollRight ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
+        <button
+          onClick={() => scroll("right")}
+          className="absolute -right-2 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:opacity-100 hover:scale-110"
+          style={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.1)" }}
         >
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(to left, #050505, transparent)" }}
-          />
-          <motion.button
-            onClick={() => scroll("right")}
-            className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full mr-1 pointer-events-auto transition-all duration-200"
-            style={{ background: "#0f0f0f", border: "1px solid #2a2a2a" }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <ChevronRight className="h-4 w-4 text-white" />
-          </motion.button>
-        </motion.div>
+          <ChevronRight className="h-5 w-5 text-white" />
+        </button>
       </div>
     </div>
   );

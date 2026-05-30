@@ -4,98 +4,132 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 const genres = [
-  { label: "Anime",   href: "/anime",   gradient: "linear-gradient(135deg, #3d0a2e 0%, #1a0a14 100%)", accent: "#ff6b9d", icon: "🌸", sub: "Japanese Animation" },
-  { label: "Cartoon", href: "/cartoon", gradient: "linear-gradient(135deg, #3d2200 0%, #1a1000 100%)", accent: "#fbbf24", icon: "🎨", sub: "Animated Series" },
-  { label: "Horror",  href: "/horror",  gradient: "linear-gradient(135deg, #1a0000 0%, #0a0505 100%)", accent: "#ef4444", icon: "💀", sub: "Fear & Suspense" },
-  { label: "Comedy",  href: "/comedy",  gradient: "linear-gradient(135deg, #2d1a00 0%, #1a0f00 100%)", accent: "#facc15", icon: "😂", sub: "Light & Fun" },
-  { label: "Action",  href: "/action",  gradient: "linear-gradient(135deg, #001a3d 0%, #00101f 100%)", accent: "#38bdf8", icon: "⚡", sub: "High Octane" },
-  { label: "Romance", href: "/romance", gradient: "linear-gradient(135deg, #3d001a 0%, #1a000f 100%)", accent: "#fb7185", icon: "❤️", sub: "Love Stories" },
-  { label: "Sci-Fi",  href: "/scifi",   gradient: "linear-gradient(135deg, #0a001a 0%, #000510 100%)", accent: "#a78bfa", icon: "🚀", sub: "Future Worlds" },
+  {
+    label: "Anime",
+    href: "/anime",
+    gradient: "linear-gradient(135deg, #581c87 0%, #831843 100%)",
+    accent: "#f472b6",
+    icon: "🌸",
+  },
+  {
+    label: "Cartoon",
+    href: "/cartoon",
+    gradient: "linear-gradient(135deg, #b45309 0%, #c2410c 100%)",
+    accent: "#fbbf24",
+    icon: "🎨",
+  },
+  {
+    label: "Horror",
+    href: "/horror",
+    gradient: "linear-gradient(135deg, #1c0505 0%, #1f2937 100%)",
+    accent: "#ef4444",
+    icon: "💀",
+  },
+  {
+    label: "Comedy",
+    href: "/comedy",
+    gradient: "linear-gradient(135deg, #b45309 0%, #d97706 100%)",
+    accent: "#facc15",
+    icon: "😂",
+  },
+  {
+    label: "Action",
+    href: "/action",
+    gradient: "linear-gradient(135deg, #1e3a5f 0%, #164e63 100%)",
+    accent: "#38bdf8",
+    icon: "⚡",
+  },
+  {
+    label: "Romance",
+    href: "/romance",
+    gradient: "linear-gradient(135deg, #831843 0%, #e11d48 100%)",
+    accent: "#fb7185",
+    icon: "❤️",
+  },
+  {
+    label: "Sci-Fi",
+    href: "/scifi",
+    gradient: "linear-gradient(135deg, #1e1b4b 0%, #1d4ed8 100%)",
+    accent: "#60a5fa",
+    icon: "🚀",
+  },
 ];
 
-const container = {
+const containerVariants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.06 } },
 };
 
-const card = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number], duration: 0.4 } },
+const EASE = [0.25, 0.46, 0.45, 0.94] as const;
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { ease: EASE, duration: 0.4 } },
 };
 
 export default function GenreBanner() {
   const router = useRouter();
 
   return (
-    <section className="px-4 md:px-8 py-8">
+    <section className="px-4 md:px-8 py-6">
       <div className="flex items-center gap-3 mb-5">
-        <div className="h-4 w-[2px] rounded-full" style={{ background: "linear-gradient(180deg, #7c3aed, #ec4899)" }} />
-        <h2 className="text-base font-semibold text-white tracking-tight">Browse by Genre</h2>
-        <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, #1f1f1f, transparent)" }} />
+        <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #7c3aed, #ec4899)" }} />
+        <h2 className="text-xl font-bold text-white tracking-tight">Browse by Genre</h2>
       </div>
 
-      <div className="overflow-x-auto no-scrollbar">
+      <div
+        className="overflow-x-auto"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
         <motion.div
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-40px" }}
-          className="flex gap-3 pb-1"
+          className="flex gap-3 pb-2"
           style={{ width: "max-content" }}
         >
           {genres.map((genre) => (
             <motion.button
               key={genre.label}
-              variants={card}
-              whileHover={{ scale: 1.04, y: -3 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 400, damping: 28 }}
+              variants={cardVariants}
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 300, damping: 24 }}
               onClick={() => router.push(genre.href)}
-              className="relative flex-shrink-0 overflow-hidden rounded-2xl cursor-pointer text-left"
+              className="relative flex-shrink-0 overflow-hidden rounded-xl cursor-pointer"
               style={{
-                width: 148,
-                height: 110,
+                width: 140,
+                height: 120,
                 background: genre.gradient,
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.07)",
               }}
             >
-              {/* Radial highlight */}
+              {/* Subtle noise texture overlay */}
               <div
                 className="absolute inset-0"
-                style={{ background: `radial-gradient(ellipse at top left, ${genre.accent}15 0%, transparent 65%)` }}
-              />
-              {/* Accent corner glow */}
-              <div
-                className="absolute top-0 right-0 h-16 w-16 rounded-full pointer-events-none"
-                style={{ background: `radial-gradient(circle, ${genre.accent}20 0%, transparent 70%)`, transform: "translate(30%, -30%)" }}
+                style={{
+                  background: "radial-gradient(ellipse at top left, rgba(255,255,255,0.06) 0%, transparent 60%)",
+                }}
               />
 
-              {/* Icon */}
+              {/* Icon top-right */}
               <span
                 className="absolute top-3 right-3 text-2xl select-none pointer-events-none"
-                style={{ filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.5))" }}
+                style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))" }}
               >
                 {genre.icon}
               </span>
 
-              {/* Label */}
-              <div className="absolute bottom-0 left-0 right-0 px-3.5 py-3">
+              {/* Label bottom */}
+              <div className="absolute bottom-0 left-0 right-0 px-3 py-3">
                 <p
-                  className="text-[13px] font-bold text-white leading-none tracking-tight"
-                  style={{ fontFamily: "var(--font-display, Syne, sans-serif)" }}
+                  className="text-sm font-bold tracking-wide leading-none text-white"
+                  style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}
                 >
                   {genre.label}
                 </p>
-                <p className="text-[10px] mt-0.5 font-medium tracking-wide" style={{ color: `${genre.accent}99` }}>
-                  {genre.sub}
-                </p>
               </div>
-
-              {/* Accent border bottom */}
-              <div
-                className="absolute bottom-0 left-3 right-3 h-[1px] rounded-full"
-                style={{ background: `linear-gradient(90deg, transparent, ${genre.accent}40, transparent)` }}
-              />
             </motion.button>
           ))}
         </motion.div>
