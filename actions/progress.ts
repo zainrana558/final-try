@@ -33,7 +33,7 @@ export async function getProgress(profileId: string, mediaId: number, mediaType:
   const supabase = await createClient();
   const { data } = await supabase
     .from("watch_progress")
-    .select("*")
+    .select("id, profile_id, media_id, media_type, title, poster_path, progress, duration, season_number, episode_number, updated_at")
     .eq("profile_id", profileId)
     .eq("media_id", mediaId)
     .eq("media_type", mediaType)
@@ -46,7 +46,7 @@ export async function getContinueWatching(profileId: string) {
   const supabase = await createClient();
   const { data } = await supabase
     .from("watch_progress")
-    .select("*")
+    .select("id, profile_id, media_id, media_type, title, poster_path, progress, duration, season_number, episode_number, updated_at")
     .eq("profile_id", profileId)
     .gt("progress", 0)
     .order("updated_at", { ascending: false })
@@ -70,7 +70,7 @@ export async function getWatchHistory(profileId: string) {
   const supabase = await createClient();
   const { data } = await supabase
     .from("watch_history")
-    .select("*")
+    .select("id, profile_id, media_id, media_type, title, poster_path, watched_at")
     .eq("profile_id", profileId)
     .order("watched_at", { ascending: false })
     .limit(50);

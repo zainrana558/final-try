@@ -10,13 +10,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Missing query" }, { status: 400 });
   }
 
-  const data = await searchMedia(query, page);
-  const filtered = {
-    ...data,
-    results: data.results.filter(
-      (item) => item.media_type === "movie" || item.media_type === "tv"
-    ),
-  };
+  try {
+    const data = await searchMedia(query, page);
+    const filtered = {
+      ...data,
+      results: data.results.filter(
+        (item) => item.media_type === "movie" || item.media_type === "tv"
+      ),
+    };
 
-  return NextResponse.json(filtered);
+    return NextResponse.json(filtered);
+  } catch {
+    return NextResponse.json({ error: "Search failed" }, { status: 500 });
+  }
 }

@@ -12,12 +12,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Missing tmdb or type" }, { status: 400 });
   }
 
-  const providers = getAllEmbedUrls(
-    type,
-    parseInt(tmdbId),
-    season ? parseInt(season) : undefined,
-    episode ? parseInt(episode) : undefined
-  );
+  try {
+    const providers = getAllEmbedUrls(
+      type,
+      parseInt(tmdbId),
+      season ? parseInt(season) : undefined,
+      episode ? parseInt(episode) : undefined
+    );
 
-  return NextResponse.json({ providers, url: providers[0]?.url ?? null });
+    return NextResponse.json({ providers, url: providers[0]?.url ?? null });
+  } catch {
+    return NextResponse.json({ error: "Failed to get embed URLs" }, { status: 500 });
+  }
 }

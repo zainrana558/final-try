@@ -40,18 +40,22 @@ export default function VideoPlayer({
 
   const fetchEmbed = useCallback(async () => {
     setLoading(true);
-    let url = `/api/embed?tmdb=${item.id}&type=${mediaType}`;
-    if (mediaType === "tv") {
-      url += `&season=${season}&episode=${episode}`;
-    }
+    try {
+      let url = `/api/embed?tmdb=${item.id}&type=${mediaType}`;
+      if (mediaType === "tv") {
+        url += `&season=${season}&episode=${episode}`;
+      }
 
-    const res = await fetch(url);
-    if (res.ok) {
-      const data = await res.json();
-      const list: EmbedProvider[] = data.providers ?? [];
-      setProviders(list);
-      setProviderIndex(0);
-      setEmbedUrl(list[0]?.url ?? data.url ?? null);
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        const list: EmbedProvider[] = data.providers ?? [];
+        setProviders(list);
+        setProviderIndex(0);
+        setEmbedUrl(list[0]?.url ?? data.url ?? null);
+      }
+    } catch {
+      // network error — embedUrl stays null, UI shows "Unable to load player"
     }
     setLoading(false);
   }, [item.id, mediaType, season, episode]);

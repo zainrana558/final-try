@@ -7,16 +7,15 @@ export default async function AnimePage() {
   const cookieStore = await cookies();
   const profileId = cookieStore.get("profile_id")?.value || null;
 
-  const [popular, topRated, trending] = await Promise.all([
+  const [popular, topRated] = await Promise.all([
     getByGenreDiscover("tv", 16, "ja"),
     getByGenreDiscover("movie", 16, "ja"),
-    getByGenreDiscover("tv", 16, "ja"),
   ]);
 
   const rows: ContentRow[] = [
-    { title: "Popular Anime", items: popular.results, mediaType: "tv" },
+    { title: "Popular Anime", items: popular.results.slice(0, 10), mediaType: "tv" },
     { title: "Anime Movies", items: topRated.results, mediaType: "movie" },
-    { title: "More Anime", items: trending.results.slice(5), mediaType: "tv" },
+    { title: "More Anime", items: popular.results.slice(10), mediaType: "tv" },
   ];
 
   return (

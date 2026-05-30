@@ -16,7 +16,7 @@ export async function getProfiles() {
 
   const { data } = await supabase
     .from("profiles")
-    .select("*")
+    .select("id, account_id, name, avatar_url, created_at")
     .eq("account_id", user.id)
     .order("created_at");
 

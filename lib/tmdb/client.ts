@@ -76,11 +76,12 @@ export async function getByGenre(mediaType: "movie" | "tv", genreId: number) {
   });
 }
 
-export async function getByGenreDiscover(mediaType: "movie" | "tv", genreId: number, language?: string) {
+export async function getByGenreDiscover(mediaType: "movie" | "tv", genreId: number, language?: string, page?: string) {
   const params: Record<string, string> = {
     with_genres: genreId.toString(),
     sort_by: "popularity.desc",
   };
   if (language) params["with_original_language"] = language;
+  if (page) params["page"] = page;
   return tmdbFetch<TMDBListResponse<MediaItem>>(`/discover/${mediaType}`, params);
 }
