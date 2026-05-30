@@ -12,7 +12,15 @@ export default async function MainLayout({
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ background: "#080605" }}>
+      {/* Warm ambient background */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{
+          background: "radial-gradient(ellipse at 50% 0%, rgba(212,168,83,0.03) 0%, transparent 50%)",
+        }}
+      />
+
       {/* Desktop sidebar */}
       <Sidebar isGuest={!user} />
 
@@ -22,9 +30,7 @@ export default async function MainLayout({
       </div>
 
       {/* Main content — offset on desktop */}
-      <main
-        className="pb-20 pt-16 md:pb-0 md:pt-0 md:ml-[260px]"
-      >
+      <main className="relative z-[1] pb-20 pt-16 md:pb-0 md:pt-0 md:ml-[260px]">
         {children}
       </main>
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Play, Info, Plus, Check } from "lucide-react";
+import { Play, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getImageUrl, getTitle } from "@/lib/utils";
 import type { MediaItem } from "@/types";
@@ -35,10 +35,10 @@ export default function HeroBanner({ items, onPlay, onInfo }: HeroBannerProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
-          initial={{ opacity: 0, scale: 1.05 }}
+          initial={{ opacity: 0, scale: 1.08 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="absolute inset-0"
         >
           <Image
@@ -51,54 +51,119 @@ export default function HeroBanner({ items, onPlay, onInfo }: HeroBannerProps) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Heavy Linear Gradient Mask - Fades to absolute black */}
+      {/* Warm Cinematic Gradient Mask - Fades to warm black */}
       <div
         className="absolute inset-0"
         style={{
-          background: "linear-gradient(to top, #000000 0%, #000000 20%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 100%)"
+          background: "linear-gradient(to top, #080605 0%, #080605 15%, rgba(8,6,5,0.75) 45%, rgba(8,6,5,0.35) 100%)",
         }}
       />
       <div
         className="absolute inset-0"
         style={{
-          background: "linear-gradient(to right, #000000 0%, rgba(0,0,0,0.85) 30%, transparent 70%)"
+          background: "linear-gradient(to right, #080605 0%, rgba(8,6,5,0.88) 35%, transparent 72%)",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(to top right, rgba(8,6,5,0.5) 0%, transparent 40%)",
+        }}
+      />
+
+      {/* Warm ambient glow overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(circle at 30% 60%, rgba(212,168,83,0.04) 0%, transparent 50%)",
         }}
       />
 
       {/* Content - Left Side */}
-      <div className="absolute bottom-20 left-8 max-w-2xl md:bottom-32 md:left-16">
+      <div className="absolute bottom-20 left-6 max-w-2xl md:bottom-32 md:left-16 z-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={current}
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 40 }}
-            transition={{ type: "spring", stiffness: 120, damping: 20 }}
-            className="space-y-6"
+            transition={{ type: "spring", stiffness: 100, damping: 22, delay: 0.15 }}
+            className="space-y-5"
           >
+            {/* Media Type Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-medium uppercase tracking-[0.15em]"
+                style={{
+                  background: "rgba(212,168,83,0.12)",
+                  border: "1px solid rgba(212,168,83,0.2)",
+                  color: "#d4a853",
+                }}
+              >
+                {mediaType === "movie" ? "Featured Movie" : "Featured Series"}
+              </span>
+            </motion.div>
+
             {/* Title */}
-            <h1 className="text-4xl font-bold text-white leading-none tracking-tighter drop-shadow-2xl md:text-6xl lg:text-7xl">
+            <h1
+              className="text-4xl font-bold leading-none tracking-tighter md:text-6xl lg:text-7xl"
+              style={{
+                color: "#f5f0eb",
+                textShadow: "0 4px 32px rgba(0,0,0,0.8), 0 1px 8px rgba(0,0,0,0.6)",
+              }}
+            >
               {getTitle(item)}
             </h1>
 
             {/* Metadata Badges */}
             {item.vote_average && (
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-black/40 border border-white/10 rounded">
-                  <span className="text-xs text-yellow-400 font-bold">★</span>
-                  <span className="text-xs text-white font-medium font-mono tracking-wide">
+                <div
+                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5"
+                  style={{
+                    background: "rgba(8,6,5,0.6)",
+                    border: "1px solid rgba(212,168,83,0.15)",
+                  }}
+                >
+                  <span style={{ color: "#e8c87a" }} className="text-xs">★</span>
+                  <span
+                    className="text-xs font-medium tracking-wide"
+                    style={{ color: "#f5f0eb" }}
+                  >
                     {item.vote_average.toFixed(1)}
                   </span>
                 </div>
                 {item.release_date && (
-                  <div className="px-3 py-1 bg-black/40 border border-white/10 rounded">
-                    <span className="text-xs text-white font-mono tracking-widest uppercase">
+                  <div
+                    className="rounded-lg px-3 py-1.5"
+                    style={{
+                      background: "rgba(8,6,5,0.6)",
+                      border: "1px solid rgba(245,240,235,0.08)",
+                    }}
+                  >
+                    <span
+                      className="text-xs tracking-widest uppercase"
+                      style={{ color: "#b8b0a4" }}
+                    >
                       {new Date(item.release_date).getFullYear()}
                     </span>
                   </div>
                 )}
-                <div className="px-3 py-1 bg-black/40 border border-white/10 rounded">
-                  <span className="text-xs text-white font-mono tracking-widest uppercase">
+                <div
+                  className="rounded-lg px-3 py-1.5"
+                  style={{
+                    background: "rgba(8,6,5,0.6)",
+                    border: "1px solid rgba(245,240,235,0.08)",
+                  }}
+                >
+                  <span
+                    className="text-xs tracking-widest uppercase"
+                    style={{ color: "#b8b0a4" }}
+                  >
                     HD
                   </span>
                 </div>
@@ -106,34 +171,43 @@ export default function HeroBanner({ items, onPlay, onInfo }: HeroBannerProps) {
             )}
 
             {/* Overview */}
-            <p className="line-clamp-3 text-sm text-zinc-300 leading-relaxed md:text-base max-w-lg">
+            <p
+              className="line-clamp-3 text-sm leading-relaxed max-w-lg md:text-base"
+              style={{
+                color: "#b8b0a4",
+                textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+              }}
+            >
               {item.overview}
             </p>
 
             {/* Action Buttons */}
             <div className="flex items-center gap-3 pt-2">
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onPlay({ ...item, media_type: mediaType })}
-                className="flex items-center gap-2 rounded-lg bg-white text-black font-semibold px-8 py-4 text-base transition-all"
+                className="flex items-center gap-2.5 rounded-xl px-8 py-4 text-base font-semibold transition-all"
                 style={{
-                  boxShadow: "0 8px 32px rgba(255,255,255,0.25), inset 0 1px 0 rgba(255,255,255,0.5)"
+                  background: "linear-gradient(135deg, #f5f0eb 0%, #e8dcc8 100%)",
+                  color: "#080605",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4), 0 0 20px rgba(212,168,83,0.15)",
                 }}
               >
                 <Play className="h-5 w-5 fill-current" />
-                Play
+                Play Now
               </motion.button>
 
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onInfo({ ...item, media_type: mediaType })}
-                className="flex items-center gap-2 rounded-lg px-7 py-4 font-semibold text-white transition-all"
+                className="flex items-center gap-2.5 rounded-xl px-7 py-4 font-semibold transition-all"
                 style={{
-                  background: "rgba(255,255,255,0.08)",
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)"
+                  background: "rgba(245,240,235,0.08)",
+                  border: "1px solid rgba(245,240,235,0.12)",
+                  color: "#f5f0eb",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
                 }}
               >
                 <Info className="h-5 w-5" />
@@ -146,7 +220,7 @@ export default function HeroBanner({ items, onPlay, onInfo }: HeroBannerProps) {
 
       {/* Dots Indicator */}
       {items.length > 1 && (
-        <div className="absolute bottom-8 right-8 flex gap-2 md:bottom-12 md:right-12">
+        <div className="absolute bottom-8 right-8 flex gap-2 md:bottom-12 md:right-12 z-10">
           {items.slice(0, 5).map((_, i) => (
             <motion.button
               key={i}
@@ -155,7 +229,7 @@ export default function HeroBanner({ items, onPlay, onInfo }: HeroBannerProps) {
               initial={false}
               animate={{
                 width: i === current ? 32 : 8,
-                background: i === current ? "#ffffff" : "rgba(255,255,255,0.3)"
+                background: i === current ? "#d4a853" : "rgba(245,240,235,0.25)",
               }}
               whileHover={{ scale: 1.2 }}
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -163,14 +237,6 @@ export default function HeroBanner({ items, onPlay, onInfo }: HeroBannerProps) {
           ))}
         </div>
       )}
-
-      {/* Ambient Backlight Glow */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: "radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08) 0%, transparent 40%)"
-        }}
-      />
     </div>
   );
 }

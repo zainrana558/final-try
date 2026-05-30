@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Clock } from "lucide-react";
 import MediaCard from "./MediaCard";
 import DetailModal from "@/components/modals/DetailModal";
 import VideoPlayer from "@/components/modals/VideoPlayer";
@@ -28,11 +29,24 @@ export default function HistoryClient({ items, profileId }: HistoryClientProps) 
   if (!items.length) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center px-4">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-white">No watch history</h2>
-          <p className="mt-2 text-sm text-zinc-400">
-            Start watching to build your history.
-          </p>
+        <div className="text-center space-y-4">
+          <div className="flex justify-center">
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-2xl"
+              style={{
+                background: "rgba(245,240,235,0.05)",
+                border: "1px solid #2a2520",
+              }}
+            >
+              <Clock className="h-8 w-8" style={{ color: "#4a4540" }} />
+            </div>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold" style={{ color: "#f5f0eb" }}>No watch history</h2>
+            <p className="mt-2 text-sm" style={{ color: "#5a544a" }}>
+              Start watching to build your history.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -43,9 +57,13 @@ export default function HistoryClient({ items, profileId }: HistoryClientProps) 
       <div className="flex items-center gap-3 mb-6">
         <div
           className="w-1 h-6 rounded-full flex-shrink-0"
-          style={{ background: "linear-gradient(180deg, #7c3aed, #ec4899)" }}
+          style={{
+            background: "linear-gradient(180deg, #d4a853, #8c7c5c)",
+            boxShadow: "0 0 8px rgba(212,168,83,0.3)",
+          }}
         />
-        <h1 className="text-xl font-bold text-white tracking-tight">Watch History</h1>
+        <h1 className="text-xl font-bold tracking-tight" style={{ color: "#f5f0eb" }}>Watch History</h1>
+        <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, #2a2520, transparent)" }} />
       </div>
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
         {items.map((item) => (

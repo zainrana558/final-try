@@ -25,21 +25,35 @@ export default function MobileNav({ isGuest = false }: MobileNavProps) {
     : allLinks;
 
   return (
-    <nav className="fixed bottom-0 left-0 z-50 w-full border-t border-border bg-background/95 backdrop-blur-sm md:hidden">
+    <nav
+      className="fixed bottom-0 left-0 z-50 w-full md:hidden"
+      style={{
+        borderTop: "1px solid #2a2520",
+        background: "#0e0c0a",
+      }}
+    >
       <div className="flex items-center justify-around py-2">
-        {links.map(({ href, icon: Icon, label }) => (
-          <Link
-            key={href}
-            href={href}
-            className={cn(
-              "flex flex-col items-center gap-1 px-3 py-1 text-xs transition-colors",
-              pathname === href ? "text-primary" : "text-muted-foreground"
-            )}
-          >
-            <Icon className="h-5 w-5" />
-            {label}
-          </Link>
-        ))}
+        {links.map(({ href, icon: Icon, label }) => {
+          const active = pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "flex flex-col items-center gap-1 px-3 py-1.5 text-xs transition-all rounded-lg",
+                active ? "text-[#d4a853]" : "text-[#5a544a]"
+              )}
+            >
+              <div className={cn(
+                "p-1.5 rounded-lg transition-all",
+                active && "bg-[rgba(212,168,83,0.1)]"
+              )}>
+                <Icon className="h-5 w-5" />
+              </div>
+              <span className="text-[10px]">{label}</span>
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );

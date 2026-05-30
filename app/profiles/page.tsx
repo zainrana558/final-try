@@ -15,7 +15,18 @@ export default async function ProfilesPage() {
     .order("created_at");
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-muted to-background p-4">
+    <div
+      className="flex min-h-screen items-center justify-center p-4 relative"
+      style={{ background: "#080605" }}
+    >
+      {/* Warm ambient glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse at 50% 40%, rgba(212,168,83,0.05) 0%, transparent 50%)",
+        }}
+      />
+
       <ProfileSelector profiles={profiles || []} />
     </div>
   );

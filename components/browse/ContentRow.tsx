@@ -34,14 +34,14 @@ export default function ContentRow({ title, items, onItemClick, mediaType }: Con
         <div
           className="w-1 h-6 rounded-full flex-shrink-0"
           style={{
-            background: "linear-gradient(180deg, #ffffff 0%, #737373 100%)",
-            boxShadow: "0 0 8px rgba(255,255,255,0.3)"
+            background: "linear-gradient(180deg, #d4a853 0%, #8c7c5c 100%)",
+            boxShadow: "0 0 8px rgba(212,168,83,0.3)",
           }}
         />
-        <h2 className="text-xl font-bold text-white tracking-tight leading-none">
+        <h2 className="text-xl font-bold tracking-tight leading-none" style={{ color: "#f5f0eb" }}>
           {title}
         </h2>
-        <div className="flex-1 h-px bg-gradient-to-r from-[#1f1f1f] to-transparent" />
+        <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, #2a2520, transparent)" }} />
       </div>
 
       {/* Scroll Row */}
@@ -51,14 +51,14 @@ export default function ContentRow({ title, items, onItemClick, mediaType }: Con
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => scroll("left")}
-          className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-200"
+          className="absolute left-4 md:left-12 top-1/2 z-20 -translate-y-1/2 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-200"
           style={{
-            background: "rgba(0,0,0,0.85)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.9)"
+            background: "rgba(8,6,5,0.88)",
+            border: "1px solid rgba(245,240,235,0.08)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.8)",
           }}
         >
-          <ChevronLeft className="h-5 w-5 text-white" />
+          <ChevronLeft className="h-5 w-5" style={{ color: "#d4a853" }} />
         </motion.button>
 
         {/* Cards Container */}
@@ -75,7 +75,7 @@ export default function ContentRow({ title, items, onItemClick, mediaType }: Con
                 type: "spring",
                 stiffness: 400,
                 damping: 30,
-                delay: index * 0.03
+                delay: index * 0.03,
               }}
             >
               <MediaCard
@@ -92,14 +92,14 @@ export default function ContentRow({ title, items, onItemClick, mediaType }: Con
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => scroll("right")}
-          className="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-200"
+          className="absolute right-4 md:right-12 top-1/2 z-20 -translate-y-1/2 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-200"
           style={{
-            background: "rgba(0,0,0,0.85)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.9)"
+            background: "rgba(8,6,5,0.88)",
+            border: "1px solid rgba(245,240,235,0.08)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.8)",
           }}
         >
-          <ChevronRight className="h-5 w-5 text-white" />
+          <ChevronRight className="h-5 w-5" style={{ color: "#d4a853" }} />
         </motion.button>
       </div>
     </div>

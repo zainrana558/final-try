@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import MediaCard from "@/components/browse/MediaCard";
 import DetailModal from "@/components/modals/DetailModal";
 import VideoPlayer from "@/components/modals/VideoPlayer";
@@ -22,7 +20,6 @@ export default function SearchPage() {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
   const [playingItem, setPlayingItem] = useState<MediaItem | null>(null);
 
-  // Fresh search whenever query changes — reset to page 1
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
@@ -42,7 +39,7 @@ export default function SearchPage() {
           setTotalPages(data.total_pages ?? 1);
         }
       } catch {
-        // network error — results stays empty
+        // network error
       }
       setLoading(false);
     }, 400);
@@ -50,7 +47,6 @@ export default function SearchPage() {
     return () => clearTimeout(timeout);
   }, [query]);
 
-  // Load next page and append — only called by the Load More button
   async function handleLoadMore() {
     const nextPage = page + 1;
     setLoadingMore(true);
@@ -63,7 +59,7 @@ export default function SearchPage() {
         setTotalPages(data.total_pages ?? totalPages);
       }
     } catch {
-      // network error — existing results unchanged
+      // network error
     }
     setLoadingMore(false);
   }
@@ -75,14 +71,20 @@ export default function SearchPage() {
 
   return (
     <div className="px-4 pt-4 md:px-8">
+      {/* Search Input */}
       <div className="relative mx-auto max-w-xl">
-        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-        <Input
+        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2" style={{ color: "#5a544a" }} />
+        <input
           type="text"
           placeholder="Search movies, TV shows..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="pl-10 text-base"
+          className="w-full rounded-xl py-3 pl-12 pr-4 text-base outline-none transition-all"
+          style={{
+            background: "rgba(245,240,235,0.04)",
+            border: "1px solid #2a2520",
+            color: "#f5f0eb",
+          }}
           autoFocus
         />
       </div>
@@ -90,7 +92,10 @@ export default function SearchPage() {
       <div className="mt-8">
         {loading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div
+              className="h-8 w-8 animate-spin rounded-full border-2"
+              style={{ borderColor: "#d4a853", borderTopColor: "transparent" }}
+            />
           </div>
         ) : results.length > 0 ? (
           <>
@@ -106,28 +111,37 @@ export default function SearchPage() {
 
             {page < totalPages && (
               <div className="mt-8 flex justify-center pb-12">
-                <Button
-                  variant="outline"
+                <button
                   onClick={handleLoadMore}
                   disabled={loadingMore}
+                  className="rounded-xl px-6 py-3 text-sm font-medium transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                  style={{
+                    border: "1px solid #2a2520",
+                    color: "#9c948a",
+                    background: "transparent",
+                  }}
                 >
                   {loadingMore ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin inline" />
                   ) : (
                     "Load More"
                   )}
-                </Button>
+                </button>
               </div>
             )}
           </>
         ) : query.trim() ? (
-          <p className="py-12 text-center text-muted-foreground">
-            No results found for &ldquo;{query}&rdquo;
-          </p>
+          <div className="py-12 text-center">
+            <p style={{ color: "#5a544a" }}>
+              No results found for &ldquo;{query}&rdquo;
+            </p>
+          </div>
         ) : (
-          <p className="py-12 text-center text-muted-foreground">
-            Start typing to search for movies and TV shows
-          </p>
+          <div className="py-12 text-center">
+            <p style={{ color: "#5a544a" }}>
+              Start typing to search for movies and TV shows
+            </p>
+          </div>
         )}
       </div>
 

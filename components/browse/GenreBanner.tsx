@@ -7,51 +7,51 @@ const genres = [
   {
     label: "Anime",
     href: "/anime",
-    gradient: "linear-gradient(135deg, #581c87 0%, #831843 100%)",
-    accent: "#f472b6",
-    icon: "🌸",
+    gradient: "linear-gradient(135deg, #5a2040 0%, #3a1a30 100%)",
+    accent: "#e85d8a",
+    icon: "✦",
   },
   {
     label: "Cartoon",
     href: "/cartoon",
-    gradient: "linear-gradient(135deg, #b45309 0%, #c2410c 100%)",
-    accent: "#fbbf24",
-    icon: "🎨",
+    gradient: "linear-gradient(135deg, #6a4010 0%, #4a3010 100%)",
+    accent: "#e8943c",
+    icon: "◆",
   },
   {
     label: "Horror",
     href: "/horror",
-    gradient: "linear-gradient(135deg, #1c0505 0%, #1f2937 100%)",
-    accent: "#ef4444",
-    icon: "💀",
+    gradient: "linear-gradient(135deg, #2a1008 0%, #1a0a04 100%)",
+    accent: "#a04030",
+    icon: "✦",
   },
   {
     label: "Comedy",
     href: "/comedy",
-    gradient: "linear-gradient(135deg, #b45309 0%, #d97706 100%)",
-    accent: "#facc15",
-    icon: "😂",
+    gradient: "linear-gradient(135deg, #5a4820 0%, #3a3020 100%)",
+    accent: "#e8c468",
+    icon: "◆",
   },
   {
     label: "Action",
     href: "/action",
-    gradient: "linear-gradient(135deg, #1e3a5f 0%, #164e63 100%)",
-    accent: "#38bdf8",
-    icon: "⚡",
+    gradient: "linear-gradient(135deg, #1e3050 0%, #162040 100%)",
+    accent: "#7ab8e8",
+    icon: "✦",
   },
   {
     label: "Romance",
     href: "/romance",
-    gradient: "linear-gradient(135deg, #831843 0%, #e11d48 100%)",
-    accent: "#fb7185",
-    icon: "❤️",
+    gradient: "linear-gradient(135deg, #4a1830 0%, #2a1020 100%)",
+    accent: "#c85878",
+    icon: "◆",
   },
   {
     label: "Sci-Fi",
     href: "/scifi",
-    gradient: "linear-gradient(135deg, #1e1b4b 0%, #1d4ed8 100%)",
-    accent: "#60a5fa",
-    icon: "🚀",
+    gradient: "linear-gradient(135deg, #1a2448 0%, #101838 100%)",
+    accent: "#5bc4c4",
+    icon: "✦",
   },
 ];
 
@@ -73,14 +73,16 @@ export default function GenreBanner() {
   return (
     <section className="px-4 md:px-8 py-6">
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #7c3aed, #ec4899)" }} />
-        <h2 className="text-xl font-bold text-white tracking-tight">Browse by Genre</h2>
+        <div
+          className="w-1 h-6 rounded-full"
+          style={{ background: "linear-gradient(180deg, #d4a853, #8c7c5c)", boxShadow: "0 0 8px rgba(212,168,83,0.3)" }}
+        />
+        <h2 className="text-xl font-bold tracking-tight" style={{ color: "#f5f0eb" }}>
+          Browse by Genre
+        </h2>
       </div>
 
-      <div
-        className="overflow-x-auto"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
+      <div className="overflow-x-auto scrollbar-hide">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -93,7 +95,7 @@ export default function GenreBanner() {
             <motion.button
               key={genre.label}
               variants={cardVariants}
-              whileHover={{ scale: 1.04, y: -2 }}
+              whileHover={{ scale: 1.04, y: -3 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: "spring", stiffness: 300, damping: 24 }}
               onClick={() => router.push(genre.href)}
@@ -102,34 +104,55 @@ export default function GenreBanner() {
                 width: 140,
                 height: 120,
                 background: genre.gradient,
-                border: "1px solid rgba(255,255,255,0.07)",
+                border: "1px solid rgba(245,240,235,0.06)",
               }}
             >
-              {/* Subtle noise texture overlay */}
+              {/* Subtle warm texture overlay */}
               <div
                 className="absolute inset-0"
                 style={{
-                  background: "radial-gradient(ellipse at top left, rgba(255,255,255,0.06) 0%, transparent 60%)",
+                  background: "radial-gradient(ellipse at top left, rgba(212,168,83,0.08) 0%, transparent 60%)",
                 }}
               />
 
               {/* Icon top-right */}
               <span
-                className="absolute top-3 right-3 text-2xl select-none pointer-events-none"
-                style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))" }}
+                className="absolute top-3 right-3 text-xl select-none pointer-events-none"
+                style={{
+                  color: genre.accent,
+                  opacity: 0.6,
+                  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
+                }}
               >
                 {genre.icon}
               </span>
 
+              {/* Decorative circle */}
+              <div
+                className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full pointer-events-none"
+                style={{
+                  background: `radial-gradient(circle, ${genre.accent}15 0%, transparent 70%)`,
+                }}
+              />
+
               {/* Label bottom */}
               <div className="absolute bottom-0 left-0 right-0 px-3 py-3">
                 <p
-                  className="text-sm font-bold tracking-wide leading-none text-white"
-                  style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}
+                  className="text-sm font-bold tracking-wide leading-none"
+                  style={{
+                    color: "#f5f0eb",
+                    textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+                  }}
                 >
                   {genre.label}
                 </p>
               </div>
+
+              {/* Hover border */}
+              <div
+                className="absolute inset-0 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ border: `1px solid ${genre.accent}40` }}
+              />
             </motion.button>
           ))}
         </motion.div>

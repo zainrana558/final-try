@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { X, ChevronDown, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import type { MediaItem, Season, Episode } from "@/types";
 import { getTitle } from "@/lib/utils";
 
@@ -55,7 +54,7 @@ export default function VideoPlayer({
         setEmbedUrl(list[0]?.url ?? data.url ?? null);
       }
     } catch {
-      // network error — embedUrl stays null, UI shows "Unable to load player"
+      // network error
     }
     setLoading(false);
   }, [item.id, mediaType, season, episode]);
@@ -68,9 +67,7 @@ export default function VideoPlayer({
     }
   };
 
-  useEffect(() => {
-    fetchEmbed();
-  }, [fetchEmbed]);
+  useEffect(() => { fetchEmbed(); }, [fetchEmbed]);
 
   useEffect(() => {
     if (mediaType !== "tv") return;
@@ -109,9 +106,7 @@ export default function VideoPlayer({
           duration: 0,
           ...(mediaType === "tv" ? { season_number: season, episode_number: episode } : {}),
         });
-      } catch {
-        // ignore
-      }
+      } catch {}
     }, 15000);
     return () => clearInterval(interval);
   }, [profileId, item, mediaType, season, episode, embedUrl]);
@@ -131,28 +126,41 @@ export default function VideoPlayer({
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black">
+    <div className="fixed inset-0 z-[60]" style={{ background: "#080605" }}>
+      {/* Top Controls */}
       <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
         {providers.length > 1 && (
           <div className="relative">
             <button
               onClick={() => setShowServers(!showServers)}
-              className="flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-2 text-sm text-white hover:bg-black/80"
+              className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm transition-all"
+              style={{
+                background: "rgba(14,12,10,0.9)",
+                border: "1px solid #2a2520",
+                color: "#b8b0a4",
+              }}
             >
               <RefreshCw className="h-4 w-4" />
               {providers[providerIndex]?.name ?? "Server"}
             </button>
             {showServers && (
-              <div className="absolute right-0 top-full mt-1 w-40 rounded-lg bg-zinc-900 p-1 shadow-lg">
+              <div
+                className="absolute right-0 top-full mt-1 w-40 rounded-xl p-1"
+                style={{
+                  background: "#12100e",
+                  border: "1px solid #2a2520",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.9)",
+                }}
+              >
                 {providers.map((p, i) => (
                   <button
                     key={p.name}
                     onClick={() => switchProvider(i)}
-                    className={`w-full rounded-md px-3 py-2 text-left text-sm transition-colors ${
-                      i === providerIndex
-                        ? "bg-primary text-white"
-                        : "text-zinc-300 hover:bg-zinc-800"
-                    }`}
+                    className="w-full rounded-lg px-3 py-2 text-left text-sm transition-all"
+                    style={{
+                      background: i === providerIndex ? "rgba(212,168,83,0.15)" : "transparent",
+                      color: i === providerIndex ? "#d4a853" : "#b8b0a4",
+                    }}
                   >
                     {p.name}
                   </button>
@@ -163,7 +171,12 @@ export default function VideoPlayer({
         )}
         <button
           onClick={onClose}
-          className="rounded-full bg-black/60 p-2 text-white hover:bg-black/80"
+          className="rounded-xl p-2 transition-all"
+          style={{
+            background: "rgba(14,12,10,0.9)",
+            border: "1px solid #2a2520",
+            color: "#b8b0a4",
+          }}
         >
           <X className="h-6 w-6" />
         </button>
@@ -173,7 +186,10 @@ export default function VideoPlayer({
         <div className="relative flex-1">
           {loading ? (
             <div className="flex h-full items-center justify-center">
-              <div className="h-10 w-10 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              <div
+                className="h-10 w-10 animate-spin rounded-full border-2"
+                style={{ borderColor: "#d4a853", borderTopColor: "transparent" }}
+              />
             </div>
           ) : embedUrl ? (
             <iframe
@@ -183,71 +199,87 @@ export default function VideoPlayer({
               allowFullScreen
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground">
-              Unable to load player
+            <div className="flex h-full flex-col items-center justify-center gap-4">
+              <p style={{ color: "#5a544a" }}>Unable to load player</p>
+              <button
+                onClick={fetchEmbed}
+                className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-all"
+                style={{
+                  border: "1px solid #2a2520",
+                  color: "#7a7168",
+                }}
+              >
+                <RefreshCw className="h-4 w-4" />
+                Retry
+              </button>
             </div>
           )}
         </div>
 
         {mediaType === "tv" && (
-          <div className="bg-card p-4">
+          <div className="p-4" style={{ background: "#12100e", borderTop: "1px solid #2a2520" }}>
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold">{getTitle(item)}</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-semibold" style={{ color: "#f5f0eb" }}>{getTitle(item)}</h3>
+                <p className="text-sm" style={{ color: "#7a7168" }}>
                   S{season} E{episode}
                   {episodes[episode - 1] && ` — ${episodes[episode - 1].name}`}
                 </p>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
                 onClick={() => setShowEpisodes(!showEpisodes)}
-                className="gap-1"
+                className="flex items-center gap-1 rounded-xl px-4 py-2 text-sm transition-all"
+                style={{
+                  border: "1px solid #2a2520",
+                  color: "#9c948a",
+                }}
               >
                 Episodes
-                <ChevronDown className={`h-4 w-4 transition-transform ${showEpisodes ? "rotate-180" : ""}`} />
-              </Button>
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${showEpisodes ? "rotate-180" : ""}`}
+                />
+              </button>
             </div>
 
             {showEpisodes && (
               <div className="mt-4 space-y-3">
-                <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                   {seasons.map((s) => (
                     <button
                       key={s.season_number}
                       onClick={() => { setSeason(s.season_number); setEpisode(1); }}
-                      className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm transition-colors ${
-                        season === s.season_number
-                          ? "bg-primary text-white"
-                          : "bg-secondary hover:bg-secondary/80"
-                      }`}
+                      className="whitespace-nowrap rounded-full px-4 py-1.5 text-sm transition-all"
+                      style={{
+                        background: season === s.season_number ? "rgba(212,168,83,0.15)" : "rgba(245,240,235,0.05)",
+                        color: season === s.season_number ? "#d4a853" : "#7a7168",
+                        border: season === s.season_number ? "1px solid rgba(212,168,83,0.2)" : "1px solid transparent",
+                      }}
                     >
                       Season {s.season_number}
                     </button>
                   ))}
                 </div>
-                <div className="max-h-48 space-y-1 overflow-y-auto" style={{ scrollbarWidth: "thin" }}>
+                <div className="max-h-48 space-y-1 overflow-y-auto scrollbar-hide">
                   {episodes.map((ep) => (
                     <button
                       key={ep.episode_number}
                       onClick={() => setEpisode(ep.episode_number)}
-                      className={`w-full rounded-lg p-3 text-left transition-colors ${
-                        episode === ep.episode_number
-                          ? "bg-primary/20 border border-primary/30"
-                          : "hover:bg-secondary"
-                      }`}
+                      className="w-full rounded-xl p-3 text-left transition-all"
+                      style={{
+                        background: episode === ep.episode_number ? "rgba(212,168,83,0.08)" : "transparent",
+                        border: episode === ep.episode_number ? "1px solid rgba(212,168,83,0.15)" : "1px solid transparent",
+                      }}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">
+                        <span className="text-sm font-medium" style={{ color: episode === ep.episode_number ? "#f5f0eb" : "#b8b0a4" }}>
                           {ep.episode_number}. {ep.name}
                         </span>
                         {ep.runtime && (
-                          <span className="text-xs text-muted-foreground">{ep.runtime}m</span>
+                          <span className="text-xs" style={{ color: "#5a544a" }}>{ep.runtime}m</span>
                         )}
                       </div>
                       {ep.overview && (
-                        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{ep.overview}</p>
+                        <p className="mt-1 line-clamp-2 text-xs" style={{ color: "#5a544a" }}>{ep.overview}</p>
                       )}
                     </button>
                   ))}

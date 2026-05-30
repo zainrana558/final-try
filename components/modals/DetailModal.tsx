@@ -2,9 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import {
-  X, Play, Plus, Check, Star, Clock, Calendar, Film,
-} from "lucide-react";
+import { X, Play, Plus, Check, Star, Film } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getImageUrl, getTitle, getYear, formatRuntime, formatRating } from "@/lib/utils";
 import type { MediaDetails, MediaItem, CastMember } from "@/types";
@@ -42,7 +40,7 @@ export default function DetailModal({
         setDetails(data);
       }
     } catch {
-      // network error — details stays null
+      // network error
     }
     setLoading(false);
   }, [mediaId, mediaType]);
@@ -107,19 +105,20 @@ export default function DetailModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 overflow-y-auto bg-black"
+      className="fixed inset-0 z-50 overflow-y-auto"
+      style={{ background: "rgba(8,6,5,0.95)" }}
     >
       <div className="flex min-h-full items-start justify-center p-4 pt-12">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 40 }}
-          transition={{ type: "spring", stiffness: 120, damping: 20 }}
+          transition={{ type: "spring", stiffness: 100, damping: 20 }}
           className="relative w-full max-w-5xl rounded-2xl overflow-hidden"
           style={{
-            background: "#0a0a0a",
-            border: "1px solid #1f1f1f",
-            boxShadow: "0 32px 64px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.03)"
+            background: "#12100e",
+            border: "1px solid #2a2520",
+            boxShadow: "0 32px 64px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.03)",
           }}
         >
           {/* Close Button */}
@@ -129,25 +128,17 @@ export default function DetailModal({
             onClick={onClose}
             className="absolute right-6 top-6 z-20 rounded-full p-2.5"
             style={{
-              background: "rgba(0,0,0,0.8)",
-              border: "1px solid rgba(255,255,255,0.1)"
+              background: "rgba(8,6,5,0.9)",
+              border: "1px solid rgba(245,240,235,0.1)",
             }}
           >
-            <X className="h-5 w-5 text-white" />
+            <X className="h-5 w-5" style={{ color: "#f5f0eb" }} />
           </motion.button>
 
           {loading ? (
             <div className="flex h-96 items-center justify-center">
               <div className="w-full max-w-3xl space-y-4 px-8">
-                <div className="h-64 bg-zinc-900 rounded-lg relative overflow-hidden">
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background: "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.03) 35%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.03) 65%, transparent 100%)",
-                      animation: "shimmer 1.5s linear infinite"
-                    }}
-                  />
-                </div>
+                <div className="h-64 rounded-xl relative overflow-hidden skeleton-shimmer" />
               </div>
             </div>
           ) : details ? (
@@ -169,17 +160,17 @@ export default function DetailModal({
                       fill
                       className="object-cover"
                     />
-                    {/* Heavy gradient to black */}
+                    {/* Warm gradient to dark */}
                     <div
                       className="absolute inset-0"
                       style={{
-                        background: "linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.7) 40%, transparent 100%)"
+                        background: "linear-gradient(to top, #12100e 0%, rgba(18,16,14,0.75) 40%, transparent 100%)",
                       }}
                     />
                     <div
                       className="absolute inset-0"
                       style={{
-                        background: "linear-gradient(to right, #0a0a0a 0%, rgba(10,10,10,0.6) 40%, transparent 100%)"
+                        background: "linear-gradient(to right, #12100e 0%, rgba(18,16,14,0.6) 40%, transparent 100%)",
                       }}
                     />
                   </>
@@ -188,75 +179,74 @@ export default function DetailModal({
 
               {/* Content Section */}
               <div className="px-8 pt-8 pb-12 space-y-8">
-                {/* Title with Ultra-Compressed Tracking */}
+                {/* Title */}
                 <div className="space-y-4">
-                  <h2 className="text-4xl font-bold text-white leading-none tracking-tighter md:text-5xl">
+                  <h2
+                    className="text-4xl font-bold leading-none tracking-tighter md:text-5xl"
+                    style={{ color: "#f5f0eb" }}
+                  >
                     {getTitle(details)}
                   </h2>
 
-                  {/* Metadata Badges - Monospace & Wide Tracking */}
+                  {/* Metadata Badges */}
                   <div className="flex flex-wrap items-center gap-3">
                     {details.vote_average && (
                       <div
-                        className="flex items-center gap-2 px-3 py-1.5 rounded border"
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg"
                         style={{
-                          borderColor: "rgba(255,255,255,0.1)",
-                          background: "rgba(255,255,255,0.05)"
+                          background: "rgba(245,240,235,0.05)",
+                          border: "1px solid rgba(212,168,83,0.15)",
                         }}
                       >
-                        <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                        <span className="text-xs text-white font-mono tracking-widest">
+                        <Star className="h-3.5 w-3.5" style={{ color: "#e8c87a", fill: "#e8c87a" }} />
+                        <span className="text-xs tracking-widest" style={{ color: "#f5f0eb" }}>
                           {formatRating(details.vote_average)}
                         </span>
                       </div>
                     )}
                     {details.release_date && (
                       <div
-                        className="px-3 py-1.5 rounded border"
+                        className="px-3 py-1.5 rounded-lg"
                         style={{
-                          borderColor: "rgba(255,255,255,0.1)",
-                          background: "rgba(255,255,255,0.05)"
+                          background: "rgba(245,240,235,0.05)",
+                          border: "1px solid rgba(245,240,235,0.08)",
                         }}
                       >
-                        <span className="text-xs text-white font-mono tracking-widest uppercase">
+                        <span className="text-xs tracking-widest uppercase" style={{ color: "#b8b0a4" }}>
                           {getYear(details)}
                         </span>
                       </div>
                     )}
                     {details.runtime && (
                       <div
-                        className="px-3 py-1.5 rounded border"
+                        className="px-3 py-1.5 rounded-lg"
                         style={{
-                          borderColor: "rgba(255,255,255,0.1)",
-                          background: "rgba(255,255,255,0.05)"
+                          background: "rgba(245,240,235,0.05)",
+                          border: "1px solid rgba(245,240,235,0.08)",
                         }}
                       >
-                        <span className="text-xs text-white font-mono tracking-widest uppercase">
+                        <span className="text-xs tracking-widest uppercase" style={{ color: "#b8b0a4" }}>
                           {formatRuntime(details.runtime)}
                         </span>
                       </div>
                     )}
                     <div
-                      className="px-3 py-1.5 rounded border"
+                      className="px-3 py-1.5 rounded-lg"
                       style={{
-                        borderColor: "rgba(255,255,255,0.1)",
-                        background: "rgba(255,255,255,0.05)"
+                        background: "rgba(245,240,235,0.05)",
+                        border: "1px solid rgba(245,240,235,0.08)",
                       }}
                     >
-                      <span className="text-xs text-white font-mono tracking-widest uppercase">
-                        4K
-                      </span>
+                      <span className="text-xs tracking-widest uppercase" style={{ color: "#b8b0a4" }}>4K</span>
                     </div>
                     <div
-                      className="px-3 py-1.5 rounded border"
+                      className="px-3 py-1.5 rounded-lg"
                       style={{
-                        borderColor: "rgba(255,255,255,0.1)",
-                        background: "rgba(255,255,255,0.05)"
+                        background: "rgba(245,240,235,0.05)",
+                        border: "1px solid rgba(245,240,235,0.08)",
                       }}
                     >
-                      <span className="text-xs text-white font-mono tracking-widest uppercase">
-                        HDR
-                      </span>
+                      <span className="text-xs tracking-widest uppercase" style={{ color: "#b8b0a4" }}>HDR</span>
                     </div>
                   </div>
                 </div>
@@ -264,12 +254,14 @@ export default function DetailModal({
                 {/* Action Buttons */}
                 <div className="flex flex-wrap items-center gap-3">
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => onPlay(details)}
-                    className="flex items-center gap-2.5 rounded-lg bg-white text-black font-semibold px-8 py-4 text-base transition-all"
+                    className="flex items-center gap-2.5 rounded-xl px-8 py-4 text-base font-semibold transition-all"
                     style={{
-                      boxShadow: "0 8px 32px rgba(255,255,255,0.2), inset 0 1px 0 rgba(255,255,255,0.5)"
+                      background: "linear-gradient(135deg, #f5f0eb 0%, #e8dcc8 100%)",
+                      color: "#080605",
+                      boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)",
                     }}
                   >
                     <Play className="h-5 w-5 fill-current" />
@@ -277,13 +269,14 @@ export default function DetailModal({
                   </motion.button>
                   {profileId && (
                     <motion.button
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.04 }}
                       whileTap={{ scale: 0.97 }}
                       onClick={toggleWatchlist}
-                      className="flex items-center gap-2.5 rounded-lg px-7 py-4 font-semibold text-white"
+                      className="flex items-center gap-2.5 rounded-xl px-7 py-4 font-semibold transition-all"
                       style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.15)"
+                        background: "rgba(245,240,235,0.05)",
+                        border: "1px solid rgba(245,240,235,0.12)",
+                        color: "#f5f0eb",
                       }}
                     >
                       {inList ? <Check className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
@@ -294,13 +287,18 @@ export default function DetailModal({
 
                 {/* Tagline */}
                 {details.tagline && (
-                  <p className="text-lg italic text-zinc-400 border-l-2 border-zinc-700 pl-5 leading-relaxed">
+                  <p
+                    className="text-lg italic border-l-2 pl-5 leading-relaxed"
+                    style={{ color: "#9c948a", borderColor: "#d4a853" }}
+                  >
                     &ldquo;{details.tagline}&rdquo;
                   </p>
                 )}
 
                 {/* Overview */}
-                <p className="text-base leading-relaxed text-zinc-300">{details.overview}</p>
+                <p className="text-base leading-relaxed" style={{ color: "#b8b0a4" }}>
+                  {details.overview}
+                </p>
 
                 {/* Genres */}
                 {details.genres && (
@@ -310,9 +308,9 @@ export default function DetailModal({
                         key={genre.id}
                         className="rounded-full px-4 py-2 text-xs font-medium tracking-wide uppercase"
                         style={{
-                          background: "rgba(255,255,255,0.05)",
-                          border: "1px solid rgba(255,255,255,0.1)",
-                          color: "#a3a3a3"
+                          background: "rgba(245,240,235,0.05)",
+                          border: "1px solid rgba(245,240,235,0.08)",
+                          color: "#9c948a",
                         }}
                       >
                         {genre.name}
@@ -324,7 +322,7 @@ export default function DetailModal({
                 {/* Star Rating */}
                 {profileId && (
                   <div className="space-y-3">
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">
+                    <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#6a6054" }}>
                       Your Rating
                     </p>
                     <div className="flex items-center gap-1">
@@ -342,15 +340,15 @@ export default function DetailModal({
                             <Star
                               className="h-5 w-5"
                               style={{
-                                fill: active ? "#facc15" : "transparent",
-                                color: active ? "#facc15" : "#3f3f46",
+                                fill: active ? "#e8c87a" : "transparent",
+                                color: active ? "#e8c87a" : "#3a352e",
                               }}
                             />
                           </motion.button>
                         );
                       })}
                       {userRating && (
-                        <span className="ml-4 text-xs text-zinc-400 font-mono tracking-widest">
+                        <span className="ml-4 text-xs tracking-widest" style={{ color: "#9c948a" }}>
                           {userRating}/10
                         </span>
                       )}
@@ -359,14 +357,17 @@ export default function DetailModal({
                 )}
 
                 {/* Divider */}
-                <div className="h-px bg-[#1f1f1f]" />
+                <div className="h-px" style={{ background: "#2a2520" }} />
 
                 {/* Cast */}
                 {details.credits?.cast && details.credits.cast.length > 0 && (
                   <div className="space-y-5">
                     <div className="flex items-center gap-3">
-                      <div className="w-1 h-6 rounded-full bg-white" style={{ boxShadow: "0 0 8px rgba(255,255,255,0.3)" }} />
-                      <h3 className="text-sm font-bold text-white uppercase tracking-widest">Cast</h3>
+                      <div
+                        className="w-1 h-6 rounded-full"
+                        style={{ background: "#d4a853", boxShadow: "0 0 8px rgba(212,168,83,0.3)" }}
+                      />
+                      <h3 className="text-sm font-bold uppercase tracking-widest" style={{ color: "#f5f0eb" }}>Cast</h3>
                     </div>
                     <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
                       {details.credits.cast.slice(0, 10).map((member: CastMember) => (
@@ -383,8 +384,8 @@ export default function DetailModal({
                             style={{
                               width: 72,
                               height: 72,
-                              background: "linear-gradient(135deg, #1a1a1a, #0a0a0a)",
-                              border: "1px solid #2a2a2a"
+                              background: "linear-gradient(135deg, #1a1612, #12100e)",
+                              border: "1px solid #2a2520",
                             }}
                           >
                             {member.profile_path ? (
@@ -395,15 +396,15 @@ export default function DetailModal({
                                 className="object-cover"
                               />
                             ) : (
-                              <div className="flex h-full items-center justify-center text-lg text-zinc-600 font-semibold">
+                              <div className="flex h-full items-center justify-center text-lg font-semibold" style={{ color: "#4a4540" }}>
                                 {member.name.charAt(0)}
                               </div>
                             )}
                           </div>
-                          <p className="mt-2.5 w-full truncate text-xs font-semibold text-zinc-200 leading-tight">
+                          <p className="mt-2.5 w-full truncate text-xs font-semibold leading-tight" style={{ color: "#b8b0a4" }}>
                             {member.name}
                           </p>
-                          <p className="w-full truncate text-[10px] text-zinc-600 leading-tight uppercase tracking-widest">
+                          <p className="w-full truncate text-[10px] leading-tight uppercase tracking-widest" style={{ color: "#4a4540" }}>
                             {member.character}
                           </p>
                         </motion.div>
@@ -416,8 +417,11 @@ export default function DetailModal({
                 {details.similar?.results && details.similar.results.length > 0 && (
                   <div className="space-y-5">
                     <div className="flex items-center gap-3">
-                      <div className="w-1 h-6 rounded-full bg-white" style={{ boxShadow: "0 0 8px rgba(255,255,255,0.3)" }} />
-                      <h3 className="text-sm font-bold text-white uppercase tracking-widest">More Like This</h3>
+                      <div
+                        className="w-1 h-6 rounded-full"
+                        style={{ background: "#d4a853", boxShadow: "0 0 8px rgba(212,168,83,0.3)" }}
+                      />
+                      <h3 className="text-sm font-bold uppercase tracking-widest" style={{ color: "#f5f0eb" }}>More Like This</h3>
                     </div>
                     <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                       {details.similar.results.slice(0, 10).map((item: MediaItem, index: number) => (
@@ -429,7 +433,7 @@ export default function DetailModal({
                             type: "spring",
                             stiffness: 400,
                             damping: 30,
-                            delay: index * 0.05
+                            delay: index * 0.05,
                           }}
                         >
                           <MediaCard
@@ -454,7 +458,7 @@ export default function DetailModal({
               </div>
             </>
           ) : (
-            <div className="flex h-96 items-center justify-center text-zinc-600">
+            <div className="flex h-96 items-center justify-center" style={{ color: "#4a4540" }}>
               Failed to load details
             </div>
           )}

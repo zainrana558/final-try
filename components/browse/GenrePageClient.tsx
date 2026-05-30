@@ -65,24 +65,23 @@ export default function GenrePageClient({ title, accentColor, rows, profileId }:
         animate="show"
         className="sticky top-0 z-10 flex items-center gap-4 px-4 md:px-8 py-4"
         style={{
-          background: "rgba(10,10,10,0.9)",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-          backdropFilter: "blur(12px)",
+          background: "#0e0c0a",
+          borderBottom: "1px solid #2a2520",
         }}
       >
         <Link
           href="/browse"
-          className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:bg-white/10"
-          style={{ border: "1px solid rgba(255,255,255,0.1)" }}
+          className="flex items-center justify-center w-9 h-9 rounded-full transition-all hover:bg-[rgba(245,240,235,0.05)]"
+          style={{ border: "1px solid #2a2520" }}
         >
-          <ArrowLeft className="h-4 w-4 text-white" />
+          <ArrowLeft className="h-4 w-4" style={{ color: "#b8b0a4" }} />
         </Link>
         <div className="flex items-center gap-3">
           <div
             className="w-1 h-6 rounded-full"
             style={{ background: `linear-gradient(180deg, ${accentColor}, ${accentColor}88)` }}
           />
-          <h1 className="text-2xl font-bold tracking-tight text-white">{title}</h1>
+          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "#f5f0eb" }}>{title}</h1>
         </div>
       </motion.div>
 
