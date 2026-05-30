@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { tsParticles } from "tsparticles-slim";
-import { loadSlim } from "tsparticles-slim";
+import { tsParticles } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
 import type { ParticleConfig } from "@/lib/particles/configs";
 
 interface ParticleLayerProps {
