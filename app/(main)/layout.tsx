@@ -23,7 +23,7 @@ export default async function MainLayout({
 
       {/* Main content — offset on desktop */}
       <main
-        className="pb-20 pt-16 md:pb-0 md:pt-0 md:ml-[240px]"
+        className="pb-20 pt-16 md:pb-0 md:pt-0 md:ml-[260px]"
       >
         {children}
       </main>
